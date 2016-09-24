@@ -1,8 +1,8 @@
 #include "OculusDisplay.h"
-#include "OculusRenderingTarget.h"
+
 #include "GL/glew.h"
+#include "OVR_CAPI_GL.h"
 #include "Extras\OVR_Math.h"
-#include <utility>
 
 OculusDisplay::OculusDisplay(Oculus& oculus, Display* mirrorDisplay):
 	oculus(oculus), mirrorDisplay(mirrorDisplay)

@@ -1,6 +1,7 @@
 #include "NormalDisplay.h"
-#include "SDL\SDL.h"
 #include "GL\glew.h"
+#include "SDL\SDL.h"
+
 #include <stdexcept>
 
 
@@ -11,7 +12,7 @@ NormalDisplay::NormalDisplay(int width, int height): width(width), height(height
 
 void NormalDisplay::init()
 {
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+	if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
 		throw new runtime_error("Could not init SDL: " + string(SDL_GetError()));
 	}
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -28,6 +29,16 @@ void NormalDisplay::init()
 		throw new runtime_error("Could not create OpenGL context: " + string(SDL_GetError()));
 	}
 
+	SDL_GameController *controller = NULL;
+	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
+		if (SDL_IsGameController(i)) {
+			controller = SDL_GameControllerOpen(i);
+			if (controller) {
+				break;
+			}
+		}
+	}
+
 	GLenum glewError = glewInit();
 	if (glewError != GLEW_OK)
 	{
@@ -38,7 +49,11 @@ void NormalDisplay::init()
 }
 void NormalDisplay::swap()
 {
-	SDL_GL_SwapWindow(window);
+	static bool swap = false;
+	swap = !swap;
+	if (swap) {
+		SDL_GL_SwapWindow(window);
+	}
 }
 
 NormalDisplay::~NormalDisplay()

@@ -1,6 +1,4 @@
 #include "OculusCamera.h"
-#include "OVR_CAPI.h"
-#include <vector>
 
 OculusCamera::OculusCamera(Oculus& oculus, std::vector<RenderingTarget*> renderingTargets):oculus(oculus)
 {

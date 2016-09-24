@@ -22,6 +22,18 @@ void Scene::init() {
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
 
+	legoBrick = new LegoBrick();
+	legoBrick->init();
+
+	vector<Vector3f>* vertices = legoBrick->getVertices();
+	glGenBuffers(1, &legoBuffer);
+	glBindBuffer(GL_ARRAY_BUFFER, legoBuffer);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * vertices->size(), vertices->data(), GL_STATIC_DRAW);
+
+	vector<Vector3ui>* indices = legoBrick->getIndices();
+	glGenBuffers(1, &legoElements);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoElements);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Vector3ui) * indices->size(), indices->data(), GL_STATIC_DRAW);
 }
 
 void Scene::render(Matrix4f pv) {
@@ -33,11 +45,29 @@ void Scene::render(Matrix4f pv) {
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	//glDrawArrays(GL_TRIANGLES, 0, 3);
+
+	Matrix4f pvm = pv * Matrix4f(
+		1, 0, 0, 0,
+		0, 1, 0, 0.3f,
+		0, 0, 1, -0.2f,
+		0, 0, 0, 1);
+	glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
+
+	glBindBuffer(GL_ARRAY_BUFFER, legoBuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoElements);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
+	glDrawElements(GL_TRIANGLES, legoBrick->getIndices()->size() * 3, GL_UNSIGNED_INT, (void*)0);
 }
 
 Scene::~Scene()
 {
+	glDeleteBuffers(1, &vertexbuffer);
+	glDeleteBuffers(1, &legoBuffer);
+	glDeleteBuffers(1, &legoElements);
+	glDeleteVertexArrays(1, &vertexArray);
+
+	delete legoBrick;
 }
 
 GLuint loadProgram() {

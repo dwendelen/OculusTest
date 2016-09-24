@@ -1,5 +1,5 @@
 #pragma once
-#include "OVR_CAPI_GL.h"
+#include "OVR_CAPI.h"
 #include "GL\glew.h"
 #include "RenderingTarget.h"
 #include "Oculus.h"

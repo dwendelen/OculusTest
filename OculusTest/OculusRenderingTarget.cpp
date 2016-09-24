@@ -1,10 +1,5 @@
 #include "OculusRenderingTarget.h"
-#include "GL/glew.h"
-#include "Extras\OVR_Math.h"
 #include "OVR_CAPI_GL.h"
-#include <utility>
-
-using namespace OVR;
 
 OculusRenderingTarget::OculusRenderingTarget(Oculus& oculus, int eye): 
 	oculus(oculus),
