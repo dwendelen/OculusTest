@@ -1,6 +1,6 @@
 #pragma once
 
-#include "SDL\SDL_video.h"
+#include "SDL/SDL_video.h"
 #include "Display.h"
 #include "NormalRenderingTarget.h"
 

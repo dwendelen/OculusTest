@@ -1,5 +1,5 @@
 #pragma once
-#include "Extras\OVR_Math.h"
+#include "Extras/OVR_Math.h"
 #include "RenderingTarget.h"
 using namespace OVR;
 
