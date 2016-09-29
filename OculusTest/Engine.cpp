@@ -1,6 +1,6 @@
 #include "Engine.h"
 
-#include "SDL\SDL.h"
+#include "SDL/SDL.h"
 
 #include "Scene.h"
 

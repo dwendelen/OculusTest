@@ -56,7 +56,10 @@ void LegoBrick::init() {
 	float y = heightBlock;
 	float z = widthPerStub - edgePenalty;
 
-	//Front
+    float xInner = x - 1.2f;
+	float yInner = y - 1.0f;
+	float zInner = z - 1.2f;
+
 	vertices = {
 		//Front
 		Vector3f(-x, y,  z), Vector3f(0, 0,  1.0f), //0
@@ -104,7 +107,20 @@ void LegoBrick::init() {
 		Vector3ui(20, 22, 21),//bottom
 		Vector3ui(20, 23, 22)
 	};
-	       z = 0.004f;
+
+//	//Seen from bottom
+//	vertices2 = {
+//        Vector3f(-xInner, yInner,  zInner),	//0
+//        Vector3f( xInner, yInner,  zInner),	//1
+//        Vector3f( xInner, 0     ,  zInner), //2
+//        Vector3f(-xInner, 0     ,  zInner), //3
+//        Vector3f(-xInner, yInner, -zInner), //4
+//        Vector3f( xInner, yInner, -zInner),	//5
+//        Vector3f( xInner, 0     , -zInner),	//6
+//        Vector3f(-xInner, 0     , -zInner)	//7
+//    };
+
+	       z =  0.004f;
 	float x1 = 0.004f;
 	float x2 = 0.012f;
 

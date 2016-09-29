@@ -1,6 +1,6 @@
 #pragma once
-#include "GL\glew.h"
-#include "Extras\OVR_Math.h"
+#include "GL/glew.h"
+#include "Extras/OVR_Math.h"
 #include <vector>
 
 using namespace OVR;
