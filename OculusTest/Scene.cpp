@@ -7,28 +7,19 @@ Scene::Scene()
 }
 
 void Scene::init() {
+	orientation = Quatf(0.0f, 0.0f, 0.0f, 1.0f);
 	program = loadProgram();
-
-	static const GLfloat g_vertex_buffer_data[] = {
-		-0.5f, -0.3f, -1.0f,
-		0.5f, -0.3f, -1.0f,
-		0.0f, 0.3f, -1.0f,
-	};
 
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
 
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
-
 	legoBrick = new LegoBrick();
 	legoBrick->init();
 
-	vector<Vector3f>* vertices = legoBrick->getVertices();
+	vector<Vector3f>* verticesAndNormal = legoBrick->getVertices();
 	glGenBuffers(1, &legoBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, legoBuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * vertices->size(), vertices->data(), GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vector3f) * verticesAndNormal->size(), verticesAndNormal->data(), GL_STATIC_DRAW);
 
 	vector<Vector3ui>* indices = legoBrick->getIndices();
 	glGenBuffers(1, &legoElements);
@@ -36,33 +27,45 @@ void Scene::init() {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Vector3ui) * indices->size(), indices->data(), GL_STATIC_DRAW);
 }
 
+void Scene::rotate(Quatf rotation)
+{
+	orientation = rotation * orientation;
+	if (!orientation.IsNormalized()) {
+		orientation.Normalize();
+	}
+}
+
 void Scene::render(Matrix4f pv) {
 	glUseProgram(program);
-	
 	GLuint matrixIndex = glGetProgramResourceLocation(program, GL_UNIFORM, "pvm");
-	glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pv);
+	GLuint rotIndex = glGetProgramResourceLocation(program, GL_UNIFORM, "rot");
 
 	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-	//glDrawArrays(GL_TRIANGLES, 0, 3);
-
+	glEnableVertexAttribArray(1);
 	Matrix4f pvm = pv * Matrix4f(
 		1, 0, 0, 0,
-		0, 1, 0, 0.3f,
+		0, 1, 0, 0,
 		0, 0, 1, -0.2f,
 		0, 0, 0, 1);
+	Matrix4f rotation(orientation);
+	pvm = pvm * rotation;
 	glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
+	glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rotation);
 
 	glBindBuffer(GL_ARRAY_BUFFER, legoBuffer);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoElements);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
 	glDrawElements(GL_TRIANGLES, legoBrick->getIndices()->size() * 3, GL_UNSIGNED_INT, (void*)0);
+
+
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(0);
+
 }
 
 Scene::~Scene()
 {
-	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteBuffers(1, &legoBuffer);
 	glDeleteBuffers(1, &legoElements);
 	glDeleteVertexArrays(1, &vertexArray);
@@ -74,16 +77,20 @@ GLuint loadProgram() {
 	char* vertexShader = "\
 		#version 330 core\n\
 		layout(location = 0) in vec3 vertex;\n\
+		layout(location = 1) in vec3 nml;\n\
+		out vec3 normalO;\n\
 		uniform mat4 pvm;\n\
-		\n\
+		uniform mat4 rot;\n\
 		void main() {\n\
 			gl_Position = pvm * vec4(vertex, 1);\n\
+			normalO = vec3(rot * vec4(nml, 1));\n\
 		}";
 	char* fragmentShader = "\
 		#version 330 core\n\
 		out vec3 color;\n\
+		in vec3 normalO;\n\
 		void main() {\n\
-			color = vec3(1, 1, 1);\n\
+			color = (0.3 + (1.0+normalO.x)*0.25) * vec3(1, 1, 1);\n\
 		}";
 
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);

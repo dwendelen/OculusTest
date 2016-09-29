@@ -9,13 +9,14 @@ class Scene
 {
 	GLuint program;
 	GLuint vertexArray;
-	GLuint vertexbuffer;
 	GLuint legoBuffer;
 	GLuint legoElements;
 	LegoBrick* legoBrick;
+	Quatf orientation;
 public:
 	Scene();
 	void init();
+	void rotate(Quatf rotation);
 	void render(Matrix4f pv);
 	~Scene();
 };

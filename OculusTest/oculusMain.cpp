@@ -12,6 +12,7 @@
 using namespace OVR;
 
 int WinMain() {
+
 	bool useOculus = true;
 	if (useOculus) {
 		int width = 800;
