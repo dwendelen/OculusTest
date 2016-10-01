@@ -1,6 +1,5 @@
 #include "NormalDisplay.h"
-#include "GL\glew.h"
-#include "SDL\SDL.h"
+#include "GL/glew.h"
 
 #include <stdexcept>
 
@@ -44,6 +43,7 @@ void NormalDisplay::init()
 	int a;
 	SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &a);
 	
+glewExperimental = GL_TRUE;
 	GLenum glewError = glewInit();
 	if (glewError != GLEW_OK)
 	{

@@ -7,9 +7,11 @@ Scene::Scene()
 }
 
 void Scene::init() {
+	printf("1");
 	orientation = Quatf(0.0f, 0.0f, 0.0f, 1.0f);
-	program = loadProgram();
-
+printf("2");	
+program = loadProgram();
+printf("3");
 	glGenVertexArrays(1, &vertexArray);
 	glBindVertexArray(vertexArray);
 
@@ -74,7 +76,8 @@ Scene::~Scene()
 }
 
 GLuint loadProgram() {
-	char* vertexShader = "\
+printf("2.0");	
+	const char* vertexShader = "\
 		#version 330 core\n\
 		layout(location = 0) in vec3 vertex;\n\
 		layout(location = 1) in vec3 nml;\n\
@@ -85,7 +88,7 @@ GLuint loadProgram() {
 			gl_Position = pvm * vec4(vertex, 1);\n\
 			normalO = vec3(rot * vec4(nml, 1));\n\
 		}";
-	char* fragmentShader = "\
+	const char* fragmentShader = "\
 		#version 330 core\n\
 		out vec3 color;\n\
 		in vec3 normalO;\n\
@@ -94,26 +97,34 @@ GLuint loadProgram() {
 		}";
 
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
+printf("2.0.5");	
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
+
+printf("2.1");	
 
 	GLint Result = GL_FALSE;
 	char errorMsg[2048];
+	GLsizei l;
 
 	glShaderSource(VertexShaderID, 1, &vertexShader, NULL);
 	glCompileShader(VertexShaderID);
-
 	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
-	glGetShaderInfoLog(VertexShaderID, 2048, NULL, errorMsg);
-	printf("Vertex problem: %s\n", errorMsg);
+	//errorMsg[0] = '\0';
+	glGetShaderInfoLog(VertexShaderID, 2048, &l, errorMsg);
+
+	//printf("Vertex problem: %i %s\n", l, errorMsg);
 	
 
 	glShaderSource(FragmentShaderID, 1, &fragmentShader, NULL);
 	glCompileShader(FragmentShaderID);
-
 	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
-	glGetShaderInfoLog(FragmentShaderID, 2048, NULL, errorMsg);
-	printf("Fragment problem: %s\n", errorMsg);
-
+//errorMsg[0] = '\0';
+	glGetShaderInfoLog(FragmentShaderID, 2048, &l, errorMsg);
+printf("2.10");
+	//printf("Fragment problem: %i %s\n", l, errorMsg);
+printf("2.11");
+	//printf("Program %p", (void*)glCreateProgram);
+printf("2.12");
 	GLuint ProgramID = glCreateProgram();
 	glAttachShader(ProgramID, VertexShaderID);
 	glAttachShader(ProgramID, FragmentShaderID);
@@ -124,6 +135,8 @@ GLuint loadProgram() {
 
 	glDeleteShader(VertexShaderID);
 	glDeleteShader(FragmentShaderID);
+
+	printf("Program %i", ProgramID);
 
 	return ProgramID;
 }

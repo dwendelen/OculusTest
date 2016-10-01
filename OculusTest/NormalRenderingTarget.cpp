@@ -1,5 +1,5 @@
 #include "NormalRenderingTarget.h"
-#include "GL\glew.h"
+#include "GL/glew.h"
 
 NormalRenderingTarget::NormalRenderingTarget(int width, int height):width(width), height(height)
 {

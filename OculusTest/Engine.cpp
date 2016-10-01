@@ -1,6 +1,6 @@
 #include "Engine.h"
 
-#include "SDL/SDL.h"
+#include "SDL.h"
 
 #include "Scene.h"
 
@@ -31,9 +31,9 @@ void Engine::run() {
 				case SDL_CONTROLLERBUTTONUP:
 					switch (windowEvent.cbutton.button) {
 						case SDL_CONTROLLER_BUTTON_BACK:
-							if (oculus) {
+							/*if (oculus) {
 								ovr_RecenterTrackingOrigin(oculus->getSession());
-							}
+							}*/
 							break;
 						case SDL_CONTROLLER_BUTTON_START:
 							return;
@@ -62,7 +62,7 @@ void Engine::run() {
 			}
 		}
 
-		if (oculus) {
+		/*if (oculus) {
 			ovrSessionStatus sessionStatus;
 			ovr_GetSessionStatus(oculus->getSession(), &sessionStatus);
 			if (sessionStatus.ShouldQuit)
@@ -74,7 +74,7 @@ void Engine::run() {
 			if (input.Buttons & ovrButton_Back) {
 				input = ovrInputState();
 			}
-		}
+		}*/
 		
 		float radiantsPerMilisec = 0.003f;
 		Quatf rotation = Quatf(Vector3f(0, 1, 0), radiantsPerMilisec * elapsedMilis * x);
