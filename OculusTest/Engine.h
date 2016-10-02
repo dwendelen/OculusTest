@@ -1,15 +1,18 @@
 #pragma once
 #include "Display.h"
 #include "Camera.h"
-//#include "Oculus.h"
+#include "InputManager.h"
+#include <memory>
+
+using namespace std;
 
 class Engine
 {
 	Display& display;
 	Camera& camera;
-	//Oculus* oculus;
+	unique_ptr<InputManager> inputManager;
 public:
-	Engine(/*Oculus* oculus,*/ Display& display, Camera& camera);
+	Engine(Display& display, Camera& camera);
 	void run();
 	~Engine();
 };

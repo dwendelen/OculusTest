@@ -19,7 +19,7 @@ int main() {
 
 	std::unique_ptr<Camera> camera(new NormalCamera(normalDisplay->getRenderingTarget()));;
 
-	Engine engine(/*nullptr, */*normalDisplay, *camera);
+	Engine engine(*normalDisplay, *camera);
 	engine.run();
 
 	return 0;

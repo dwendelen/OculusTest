@@ -29,21 +29,8 @@ void NormalDisplay::init()
 		throw new runtime_error("Could not create OpenGL context: " + string(SDL_GetError()));
 	}
 
-	SDL_GameController *controller = NULL;
-	for (int i = 0; i < SDL_NumJoysticks(); ++i) {
-		if (SDL_IsGameController(i)) {
-			controller = SDL_GameControllerOpen(i);
-			if (controller) {
-				break;
-			}
-		}
-	}
 
-
-	int a;
-	SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &a);
-
-glewExperimental = GL_TRUE;
+    glewExperimental = GL_TRUE;
 	GLenum glewError = glewInit();
 	if (glewError != GLEW_OK)
 	{
