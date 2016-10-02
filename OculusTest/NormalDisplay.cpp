@@ -39,21 +39,19 @@ void NormalDisplay::init()
 		}
 	}
 
-	
+
 	int a;
 	SDL_GL_GetAttribute(SDL_GL_DEPTH_SIZE, &a);
-	
+
 glewExperimental = GL_TRUE;
 	GLenum glewError = glewInit();
 	if (glewError != GLEW_OK)
 	{
 		throw new runtime_error("Error initializing GLEW: " + string((char *)glewGetErrorString(glewError)));
 	}
-	//glDisable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	//glDepthFunc(GL_NEVER);
-	//glDepthFunc(GL_GREATER);
-	
+	glEnable(GL_CULL_FACE);
+	glFrontFace(GL_CCW);
 }
 void NormalDisplay::swap()
 {

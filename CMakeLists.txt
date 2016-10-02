@@ -18,14 +18,6 @@ include_directories (
     ${GLEW_INCLUDE_DIR}
     ${SDL2_INCLUDE_DIR}
 )
-message("inc")
-message(${OPENGL_INCLUDE_DIR}
-    ${GLEW_INCLUDE_DIR}
-    ${SDL2_INCLUDE_DIR})
-message("libs")
-message(${OPENGL_LIBRARIES}
-    ${GLEW_LIBRARIES}
-    ${SDL2_LIBRARIES})
 
 add_executable(OculusTestN
     OculusTest/normalMain.cpp
@@ -34,6 +26,8 @@ add_executable(OculusTestN
     OculusTest/LegoBrick.cpp
     OculusTest/NormalCamera.cpp
     OculusTest/NormalDisplay.cpp
+    OculusTest/MemoryManager.cpp
+    OculusTest/InputManager.cpp
     OculusTest/NormalRenderingTarget.cpp)
 
 target_link_libraries(OculusTestN
@@ -42,3 +36,4 @@ target_link_libraries(OculusTestN
     ${SDL2_LIBRARIES}
 )
 
+add_executable(testEx test.cpp)

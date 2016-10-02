@@ -17,8 +17,8 @@ public:
 	void swap();
 	int getWidth() { return width; }
 	int getHeight() { return height; }
-	RenderingTarget* getRenderingTarget() {
-		return &renderingTarget;
+	RenderingTarget& getRenderingTarget() {
+		return renderingTarget;
 	}
 	~NormalDisplay();
 };

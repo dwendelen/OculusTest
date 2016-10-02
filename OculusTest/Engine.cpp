@@ -1,16 +1,16 @@
 #include "Engine.h"
-
 #include "SDL.h"
-
 #include "Scene.h"
+#include "MemoryManager.h"
 
-
-Engine::Engine(Oculus* oculus, Display* display, Camera* camera): display(display), camera(camera), oculus(oculus)
+Engine::Engine(/*Oculus* oculus, */Display& display, Camera& camera): display(display), camera(camera)//, oculus(oculus)
 {
 }
 
 void Engine::run() {
-	Scene scene = Scene();
+    MemoryManager loader;
+    loader.init();
+	Scene scene(loader);
 	scene.init();
 
 	float x = 0;
@@ -28,6 +28,11 @@ void Engine::run() {
 			switch (windowEvent.type) {
 				case SDL_QUIT:
 					return;
+                case SDL_KEYDOWN:
+                    switch(windowEvent.key.keysym.scancode) {
+                        case SDL_SCANCODE_ESCAPE:
+                            return;
+                    }
 				case SDL_CONTROLLERBUTTONUP:
 					switch (windowEvent.cbutton.button) {
 						case SDL_CONTROLLER_BUTTON_BACK:
@@ -75,21 +80,21 @@ void Engine::run() {
 				input = ovrInputState();
 			}
 		}*/
-		
+
 		float radiantsPerMilisec = 0.003f;
 		Quatf rotation = Quatf(Vector3f(0, 1, 0), radiantsPerMilisec * elapsedMilis * x);
 		rotation *= Quatf(Vector3f(1, 0, 0), radiantsPerMilisec * elapsedMilis * y);
 		scene.rotate(rotation);
 
-		display->prepareForNewFrame();
-		for (int perspective = 0; perspective < camera->getNbOfPerspectives(); perspective++) {
-			Matrix4f pv = camera->calculatePV(perspective);
-			RenderingTarget* renderingTarget = camera->getRenderingTarget(perspective);
-			renderingTarget->prepareForRendering();
+		display.prepareForNewFrame();
+		for (int perspective = 0; perspective < camera.getNbOfPerspectives(); perspective++) {
+			Matrix4f pv = camera.calculatePV(perspective);
+			RenderingTarget& renderingTarget = camera.getRenderingTarget(perspective);
+			renderingTarget.prepareForRendering();
 			scene.render(pv);
-			renderingTarget->renderingDone();
+			renderingTarget.renderingDone();
 		}
-		display->swap();
+		display.swap();
 	}
 }
 
