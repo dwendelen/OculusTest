@@ -8,7 +8,8 @@ InputManager::InputManager(Scene& scene):
     y(0),
     lastTicks(0),
     scene(scene),
-    shouldQuit(false)
+    shouldQuit(false),
+    controller(NULL)
 {
 
 }
@@ -24,6 +25,10 @@ void InputManager::init()
 			}
 		}
 	}
+    if(!controller) {
+        y = 1.0f;
+        x = 0.8f;
+    }
 }
 
 void InputManager::processInput() {

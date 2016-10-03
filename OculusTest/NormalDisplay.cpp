@@ -1,6 +1,7 @@
 #include "NormalDisplay.h"
 #include "GL/glew.h"
 
+#include <string>
 #include <stdexcept>
 
 

@@ -12,7 +12,6 @@ void Scene::init() {
 	orientation = Quatf(0.0f, 0.0f, 0.0f, 1.0f);
     program = loadProgram();
 
-
 	legoBrick.reset(new LegoBrick());
 	legoBrick->init();
     memoryManager.load(*legoBrick);
@@ -28,10 +27,9 @@ void Scene::rotate(Quatf rotation)
 
 void Scene::render(Matrix4f pv) {
 	glUseProgram(program);
-	GLuint matrixIndex = glGetProgramResourceLocation(program, GL_UNIFORM, "pvm");
-	GLuint rotIndex = glGetProgramResourceLocation(program, GL_UNIFORM, "rot");
-
-
+	GLuint matrixIndex = glGetUniformLocation(program, "pvm");
+	GLuint rotIndex = glGetUniformLocation(program, "rot");
+	
 	Matrix4f pvm = pv * Matrix4f(
 		1, 0, 0, 0,
 		0, 1, 0, 0,
@@ -42,13 +40,15 @@ void Scene::render(Matrix4f pv) {
 	glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
 	glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rotation);
 
+
     glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+	
     memoryManager.bindModel();
 	glDrawElements(GL_TRIANGLES, legoBrick->getIndices().size() * 3, GL_UNSIGNED_INT, (void*)0);
+	
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
-
 }
 
 Scene::~Scene()
