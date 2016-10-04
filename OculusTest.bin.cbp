@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="OculusTest.bin" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/xtrit/OculusTest" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="/home/xtrit/OculusTest" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/xtrit/OculusTest" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="OculusTestN">
+         <Option output="/home/xtrit/OculusTest/OculusTestN" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/xtrit/OculusTest" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/xtrit/OculusTest/OculusTest" />
+            <Add directory="/home/xtrit/OculusTest/OculusTest/OVR" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+            <Add directory="/usr/local/include/SDL2" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 OculusTestN" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="OculusTestN/fast">
+         <Option output="/home/xtrit/OculusTest/OculusTestN" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/xtrit/OculusTest" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add directory="/home/xtrit/OculusTest/OculusTest" />
+            <Add directory="/home/xtrit/OculusTest/OculusTest/OVR" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+            <Add directory="/usr/local/include/SDL2" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 OculusTestN/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/xtrit/OculusTest/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/Engine.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/Engine.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/InputManager.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/InputManager.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/LegoBrick.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/LegoBrick.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/MemoryManager.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/MemoryManager.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/NormalCamera.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/NormalCamera.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/NormalDisplay.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/NormalDisplay.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/NormalRenderingTarget.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/NormalRenderingTarget.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/Scene.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/Scene.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/normalMain.cpp">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/OculusTest/normalMain.h">
+         <Option target="OculusTestN"/>
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/xtrit/OculusTest/FindSDL2.cmake">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>

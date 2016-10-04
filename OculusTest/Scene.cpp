@@ -29,7 +29,7 @@ void Scene::render(Matrix4f pv) {
 	glUseProgram(program);
 	GLuint matrixIndex = glGetUniformLocation(program, "pvm");
 	GLuint rotIndex = glGetUniformLocation(program, "rot");
-	
+
 	Matrix4f pvm = pv * Matrix4f(
 		1, 0, 0, 0,
 		0, 1, 0, 0,
@@ -43,10 +43,11 @@ void Scene::render(Matrix4f pv) {
 
     glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-	
+//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     memoryManager.bindModel();
 	glDrawElements(GL_TRIANGLES, legoBrick->getIndices().size() * 3, GL_UNSIGNED_INT, (void*)0);
-	
+	glDrawElements(GL_LINES, legoBrick->getIndices().size() * 6, GL_UNSIGNED_INT, (void*)0);
+
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
 }
