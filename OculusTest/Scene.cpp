@@ -25,6 +25,17 @@ void Scene::rotate(Quatf rotation)
 	}
 }
 
+void Scene::enableWireframe() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glDisable(GL_CULL_FACE);
+
+}
+
+void Scene::disableWireframe() {
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    glEnable(GL_CULL_FACE);
+}
+
 void Scene::render(Matrix4f pv) {
 	glUseProgram(program);
 	GLuint matrixIndex = glGetUniformLocation(program, "pvm");
@@ -43,7 +54,6 @@ void Scene::render(Matrix4f pv) {
 
     glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
-//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     memoryManager.bindModel();
 	glDrawElements(GL_TRIANGLES, legoBrick->getIndices().size() * 3, GL_UNSIGNED_INT, (void*)0);
 	glDrawElements(GL_LINES, legoBrick->getIndices().size() * 6, GL_UNSIGNED_INT, (void*)0);

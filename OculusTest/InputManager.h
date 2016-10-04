@@ -11,6 +11,7 @@ class InputManager {
         Uint32 lastTicks;
         bool shouldQuit;
         SDL_GameController *controller;
+        bool wireframe;
 
         void quit();
 	public:

@@ -7,7 +7,6 @@ class MemoryManager
         GLuint vertexArray;
         GLuint legoBuffer;
         GLuint legoElements;
-        GLuint legoLineElements;
     public:
         MemoryManager();
         void init();

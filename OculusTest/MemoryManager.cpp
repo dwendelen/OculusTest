@@ -19,28 +19,12 @@ void MemoryManager::load(const Model& model)
 	glGenBuffers(1, &legoElements);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoElements);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Vector3ui) * indices.size(), indices.data(), GL_STATIC_DRAW);
-
-	vector<GLuint> lineSegments;
-	for(const Vector3ui& triangle: indices) {
-        lineSegments.push_back(triangle.x);
-        lineSegments.push_back(triangle.y);
-        lineSegments.push_back(triangle.y);
-        lineSegments.push_back(triangle.z);
-        lineSegments.push_back(triangle.z);
-        lineSegments.push_back(triangle.x);
-    }
-
-    glGenBuffers(1, &legoLineElements);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoLineElements);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(GLuint) * lineSegments.size(), lineSegments.data(), GL_STATIC_DRAW);
 }
 void MemoryManager::bindModel() {
     glBindBuffer(GL_ARRAY_BUFFER, legoBuffer);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoElements);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoLineElements);
-
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoElements);
 }
 MemoryManager::~MemoryManager()
 {

@@ -9,7 +9,8 @@ InputManager::InputManager(Scene& scene):
     lastTicks(0),
     scene(scene),
     shouldQuit(false),
-    controller(NULL)
+    controller(NULL),
+    wireframe(false)
 {
 
 }
@@ -49,6 +50,19 @@ void InputManager::processInput() {
                             quit();
                             return;
                     }
+                    break;
+                case SDL_CONTROLLERBUTTONDOWN:
+                    switch (windowEvent.cbutton.button) {
+                        case SDL_CONTROLLER_BUTTON_Y:
+                                wireframe = !wireframe;
+                                if(wireframe) {
+                                    scene.enableWireframe();
+                                } else {
+                                    scene.disableWireframe();
+                                }
+                                break;
+                    }
+                    break;
 				case SDL_CONTROLLERBUTTONUP:
 					switch (windowEvent.cbutton.button) {
 						case SDL_CONTROLLER_BUTTON_BACK:

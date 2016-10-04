@@ -18,6 +18,8 @@ public:
 	void init();
 	void rotate(Quatf rotation);
 	void render(Matrix4f pv);
+	void enableWireframe();
+	void disableWireframe();
 	~Scene();
 };
 
