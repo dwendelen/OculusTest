@@ -34,4 +34,4 @@ target_link_libraries(OculusTestN
     ${SDL2_LIBRARY}
 )
 
-#add_executable(testEx test.cpp)
+add_executable(testEx test.cpp)
