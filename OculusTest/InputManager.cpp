@@ -3,11 +3,12 @@
 
 using namespace OVR;
 
-InputManager::InputManager(Scene& scene):
+InputManager::InputManager(Scene& scene, VR& vr):
     x(0),
     y(0),
     lastTicks(0),
     scene(scene),
+    vr(vr),
     shouldQuit(false),
     controller(NULL),
     wireframe(false)
@@ -69,6 +70,7 @@ void InputManager::processInput() {
 							/*if (oculus) {
 								ovr_RecenterTrackingOrigin(oculus->getSession());
 							}*/
+							vr.recenter();
 							break;
 						case SDL_CONTROLLER_BUTTON_START:
                             quit();

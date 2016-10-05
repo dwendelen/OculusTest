@@ -2,10 +2,13 @@
 #include "SDL.h"
 
 #include "Scene.h"
+#include "VR.h"
 
 class InputManager {
     private:
         Scene& scene;
+        VR& vr;
+
         float x;
         float y;
         Uint32 lastTicks;
@@ -15,7 +18,7 @@ class InputManager {
 
         void quit();
 	public:
-        InputManager(Scene& scene);
+        InputManager(Scene& scene, VR& vr);
         void init();
         void processInput();
         bool isShouldQuit() { return shouldQuit; }

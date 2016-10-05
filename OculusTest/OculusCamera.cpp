@@ -1,8 +1,10 @@
 #include "OculusCamera.h"
 
-OculusCamera::OculusCamera(Oculus& oculus, std::vector<RenderingTarget*> renderingTargets):oculus(oculus)
+OculusCamera::OculusCamera(Oculus& oculus, std::vector<std::reference_wrapper<RenderingTarget>> renderingTargets):
+    oculus(oculus),
+    renderingTargets(renderingTargets)
 {
-	this->renderingTargets = renderingTargets;
+
 }
 
 Matrix4f OculusCamera::calculatePV(int eye)
@@ -19,7 +21,7 @@ Matrix4f OculusCamera::calculatePV(int eye)
 	return proj * view;
 }
 
-RenderingTarget* OculusCamera::getRenderingTarget(int perspective)
+RenderingTarget& OculusCamera::getRenderingTarget(int perspective)
 {
 	return renderingTargets[perspective];
 }

@@ -17,21 +17,41 @@ include_directories (
     ${SDL2_INCLUDE_DIR}
 )
 
-add_executable(OculusTestN
-    OculusTest/normalMain.cpp
+set(CORE_SRC
     OculusTest/Scene.cpp
     OculusTest/Engine.cpp
     OculusTest/LegoBrick.cpp
-    OculusTest/NormalCamera.cpp
-    OculusTest/NormalDisplay.cpp
     OculusTest/MemoryManager.cpp
     OculusTest/InputManager.cpp
-    OculusTest/NormalRenderingTarget.cpp)
-
-target_link_libraries(OculusTestN
+)
+set(CORE_LIBS
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARIES}
     ${SDL2_LIBRARY}
+)
+
+add_executable(OculusTestN
+    ${CORE_SRC}
+    OculusTest/normalMain.cpp
+    OculusTest/NormalCamera.cpp
+    OculusTest/NormalDisplay.cpp
+    OculusTest/NormalRenderingTarget.cpp)
+
+target_link_libraries(OculusTestN
+    ${CORE_LIBS}
+)
+
+add_executable(OculusTestO
+    ${CORE_SRC}
+    OculusTest/oculusMain.cpp
+    OculusTest/OculusCamera.cpp
+    OculusTest/OculusDisplay.cpp
+    OculusTest/OculusRenderingTarget.cpp
+    OculusTest/NormalDisplay.cpp
+    OculusTest/Oculus.cpp)
+
+target_link_libraries(OculusTestO
+    ${CORE_LIBS}
 )
 
 add_executable(testEx test.cpp)

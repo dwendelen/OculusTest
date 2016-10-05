@@ -2,7 +2,7 @@
 
 #include "GL/glew.h"
 #include "OVR_CAPI_GL.h"
-#include "Extras\OVR_Math.h"
+#include "Extras/OVR_Math.h"
 
 OculusDisplay::OculusDisplay(Oculus& oculus, Display* mirrorDisplay):
 	oculus(oculus), mirrorDisplay(mirrorDisplay)
@@ -30,11 +30,11 @@ void OculusDisplay::init()
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
 	for (int eye = 0; eye < 2; eye++) {
-		renderingTargets[eye] = std::unique_ptr<OculusRenderingTarget>(new OculusRenderingTarget(oculus, eye));
-		renderingTargets[eye]->init();
-		layer.ColorTexture[eye] = renderingTargets[eye]->getSwapChain();
+		renderingTargets.push_back(OculusRenderingTarget(oculus, eye));
+		renderingTargets[eye].init();
+		layer.ColorTexture[eye] = renderingTargets[eye].getSwapChain();
 		layer.Fov[eye] = oculus.getFov(eye);
-		layer.Viewport[eye] = OVR::Recti(renderingTargets[eye]->getSize());
+		layer.Viewport[eye] = OVR::Recti(renderingTargets[eye].getSize());
 	}
 	layer.Header.Type = ovrLayerType_EyeFov;
 	layer.Header.Flags = ovrLayerFlag_TextureOriginAtBottomLeft;
@@ -44,7 +44,7 @@ void OculusDisplay::swap()
 {
 	ovrLayerHeader* layers = &layer.Header;
 	ovr_SubmitFrame(session, oculus.getFrameNumber(), nullptr, &layers, 1);
-	
+
 	mirrorDisplay->prepareForNewFrame();
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, mirrorFrameBuffer);
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

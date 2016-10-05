@@ -4,18 +4,19 @@
 #include "Oculus.h"
 #include "OculusRenderingTarget.h"
 #include <vector>
+#include <functional>
 
 class OculusCamera: public Camera
 {
 	ovrSession session;
 	Oculus& oculus;
 	ovrFovPort fov[2];
-	std::vector<RenderingTarget*> renderingTargets;
+	std::vector<std::reference_wrapper<RenderingTarget>> renderingTargets;
 
 public:
-	OculusCamera::OculusCamera(Oculus& oculus, std::vector<RenderingTarget*> renderingTargets);
+	OculusCamera(Oculus& oculus, std::vector<std::reference_wrapper<RenderingTarget>> renderingTargets);
 	Matrix4f calculatePV(int eye);
 	int getNbOfPerspectives() { return 2; }
-	RenderingTarget* getRenderingTarget(int perspective);
+	RenderingTarget& getRenderingTarget(int perspective);
 	~OculusCamera();
 };

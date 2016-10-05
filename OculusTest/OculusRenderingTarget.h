@@ -1,6 +1,6 @@
 #pragma once
 #include "OVR_CAPI.h"
-#include "GL\glew.h"
+#include "GL/glew.h"
 #include "RenderingTarget.h"
 #include "Oculus.h"
 
@@ -17,7 +17,7 @@ public:
 	OculusRenderingTarget(Oculus& oculus) : oculus(oculus) {};
 	OculusRenderingTarget(Oculus& oculus, int eye);
 	void init();
-	ovrTextureSwapChain OculusRenderingTarget::getSwapChain();
+	ovrTextureSwapChain getSwapChain();
 	ovrSizei getSize();
 	void prepareForRendering();
 	void renderingDone();

@@ -3,9 +3,10 @@
 #include "Scene.h"
 #include "MemoryManager.h"
 
-Engine::Engine(Display& display, Camera& camera):
+Engine::Engine(Display& display, Camera& camera, VR& vr):
     display(display),
-    camera(camera)
+    camera(camera),
+    vr(vr)
 {
 }
 
@@ -15,7 +16,7 @@ void Engine::run() {
 	Scene scene(loader);
 	scene.init();
 
-	inputManager.reset(new InputManager(scene));
+	inputManager.reset(new InputManager(scene, vr));
     inputManager->init();
 
 	while (true) {

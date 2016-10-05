@@ -53,6 +53,11 @@ ovrFovPort Oculus::getFov(int eye)
 	return eyeRenderDesc[eye].Fov;
 }
 
+void Oculus::recenter()
+{
+	ovr_RecenterTrackingOrigin(session);
+}
+
 Oculus::~Oculus()
 {
 	ovr_Destroy(session);

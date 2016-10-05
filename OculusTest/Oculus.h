@@ -1,7 +1,8 @@
 #pragma once
 #include "OVR_CAPI.h"
+#include "VR.h"
 
-class Oculus
+class Oculus: public VR
 {
 	ovrSession session;
 	ovrGraphicsLuid luid;
@@ -19,6 +20,7 @@ public:
 	long long getFrameNumber();
 	ovrPosef getEyePose(int eye);
 	ovrSizei getResolution();
+	virtual void recenter();
 	~Oculus();
 };
 

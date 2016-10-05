@@ -10,9 +10,10 @@ class Engine
 {
 	Display& display;
 	Camera& camera;
+	VR& vr;
 	unique_ptr<InputManager> inputManager;
 public:
-	Engine(Display& display, Camera& camera);
+	Engine(Display& display, Camera& camera, VR& vr);
 	void run();
 	~Engine();
 };

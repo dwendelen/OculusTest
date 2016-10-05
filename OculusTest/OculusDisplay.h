@@ -18,16 +18,17 @@ class OculusDisplay: public Display
 	ovrLayerEyeFov layer;
 	Oculus& oculus;
 	Display* mirrorDisplay;
-	std::unique_ptr<OculusRenderingTarget> renderingTargets[2];
+	std::vector<OculusRenderingTarget> renderingTargets;
 public:
 	OculusDisplay(Oculus& oculus, Display* mirrorDisplay);
 	void init();
 	void swap();
-	std::vector<RenderingTarget*> getRenderingTargets() {
-		std::vector<RenderingTarget*> result = std::vector<RenderingTarget*>();
-		result.push_back(renderingTargets[0].get());
-		result.push_back(renderingTargets[1].get());
+	std::vector<std::reference_wrapper<RenderingTarget>> getRenderingTargets() {
+		std::vector<std::reference_wrapper<RenderingTarget>> result;
+		result.push_back(renderingTargets[0]);
+		result.push_back(renderingTargets[1]);
 		return result;
+		//return renderingTargets;
 	}
 	void prepareForNewFrame();
 	int getWidth();
