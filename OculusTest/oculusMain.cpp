@@ -24,7 +24,7 @@ int main(int argc, char* argv[]) {
 
     std::unique_ptr<Camera> camera (new OculusCamera(oculus, display->getRenderingTargets()));;
 
-    Engine engine(*normalDisplay, *camera, oculus);
+    Engine engine(*display, *camera, oculus);
     engine.run();
 	return 0;
 }

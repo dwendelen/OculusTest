@@ -30,7 +30,7 @@ void OculusDisplay::init()
 	glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
 	for (int eye = 0; eye < 2; eye++) {
-		renderingTargets.push_back(OculusRenderingTarget(oculus, eye));
+		renderingTargets.push_back(std::move(OculusRenderingTarget(oculus, eye)));
 		renderingTargets[eye].init();
 		layer.ColorTexture[eye] = renderingTargets[eye].getSwapChain();
 		layer.Fov[eye] = oculus.getFov(eye);

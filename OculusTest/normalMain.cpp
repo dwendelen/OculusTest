@@ -1,5 +1,3 @@
-#include "normalMain.h"
-
 #include <memory>
 
 #include "NormalCamera.h"

@@ -3,10 +3,25 @@
 
 OculusRenderingTarget::OculusRenderingTarget(Oculus& oculus, int eye): 
 	oculus(oculus),
-	eye(eye)
+	eye(eye),
+	alive(true)
 {
 	this->session = oculus.getSession();
 }
+
+OculusRenderingTarget::OculusRenderingTarget(OculusRenderingTarget&& moveFom) :
+	oculus(moveFom.oculus),
+	eye(moveFom.eye),
+	session(moveFom.session),
+	alive(true),
+	swapChain(moveFom.swapChain),
+	depthBuffer(moveFom.depthBuffer),
+	frameBuffer(moveFom.frameBuffer),
+	size(moveFom.size)
+{
+	moveFom.alive = false;
+}
+
 
 void OculusRenderingTarget::init() {
 	size = ovr_GetFovTextureSize(session, ovrEyeType(eye), oculus.getFov(eye), 1.0f);
@@ -78,7 +93,9 @@ void OculusRenderingTarget::renderingDone()
 
 OculusRenderingTarget::~OculusRenderingTarget()
 {
-	ovr_DestroyTextureSwapChain(session, swapChain);
-	glDeleteRenderbuffers(1, &depthBuffer);
-	glDeleteFramebuffers(1, &frameBuffer);
+	if (alive) {
+		ovr_DestroyTextureSwapChain(session, swapChain);
+		glDeleteRenderbuffers(1, &depthBuffer);
+		glDeleteFramebuffers(1, &frameBuffer);
+	}
 }

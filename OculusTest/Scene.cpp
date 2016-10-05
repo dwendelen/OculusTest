@@ -42,9 +42,9 @@ void Scene::render(Matrix4f pv) {
 	GLuint rotIndex = glGetUniformLocation(program, "rot");
 
 	Matrix4f pvm = pv * Matrix4f(
-		1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, -0.2f,
+		3, 0, 0, 0,
+		0, 3, 0, 0,
+		0, 0, 3, -0.2f,
 		0, 0, 0, 1);
 	Matrix4f rotation(orientation);
 	pvm = pvm * rotation;

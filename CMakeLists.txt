@@ -48,10 +48,12 @@ add_executable(OculusTestO
     OculusTest/OculusDisplay.cpp
     OculusTest/OculusRenderingTarget.cpp
     OculusTest/NormalDisplay.cpp
+	OculusTest/NormalRenderingTarget.cpp
     OculusTest/Oculus.cpp)
 
 target_link_libraries(OculusTestO
     ${CORE_LIBS}
+	C:/Users/Xtrit/Downloads/ovr_sdk_win_1.7.0_public/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib
 )
 
 add_executable(testEx test.cpp)

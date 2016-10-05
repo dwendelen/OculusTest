@@ -13,9 +13,11 @@ class OculusRenderingTarget : public RenderingTarget
 	GLuint frameBuffer;
 	ovrSizei size;
 	int eye;
+	bool alive;
 public:
 	OculusRenderingTarget(Oculus& oculus) : oculus(oculus) {};
 	OculusRenderingTarget(Oculus& oculus, int eye);
+	OculusRenderingTarget(OculusRenderingTarget && moveFom);
 	void init();
 	ovrTextureSwapChain getSwapChain();
 	ovrSizei getSize();
