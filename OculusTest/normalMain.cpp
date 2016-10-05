@@ -10,7 +10,7 @@
 
 using namespace OVR;
 
-int main() {
+int main(int argc, char* argv[]) {
 	int width = 800;
 	int height = 600;
 
