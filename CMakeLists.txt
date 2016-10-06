@@ -27,6 +27,7 @@ set(CORE_SRC
     OculusTest/LegoBrick.cpp
     OculusTest/MemoryManager.cpp
     OculusTest/InputManager.cpp
+    OculusTest/ModelInstance.cpp
 )
 set(CORE_LIBS
     ${OPENGL_LIBRARIES}

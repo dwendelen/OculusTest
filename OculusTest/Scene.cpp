@@ -14,21 +14,18 @@ void Scene::init() {
 
 	legoBrick.reset(new LegoBrick());
 	legoBrick->init();
+	model.reset(new ModelInstance(*legoBrick, Vector3f(0.0f, 0.0f, -0.2f), orientation));
     memoryManager.load(*legoBrick);
 }
 
 void Scene::rotate(Quatf rotation)
 {
-	orientation = rotation * orientation;
-	if (!orientation.IsNormalized()) {
-		orientation.Normalize();
-	}
+	model->rotate(rotation);
 }
 
 void Scene::enableWireframe() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
     glDisable(GL_CULL_FACE);
-
 }
 
 void Scene::disableWireframe() {
@@ -41,15 +38,9 @@ void Scene::render(Matrix4f pv) {
 	GLuint matrixIndex = glGetUniformLocation(program, "pvm");
 	GLuint rotIndex = glGetUniformLocation(program, "rot");
 
-	Matrix4f pvm = pv * Matrix4f(
-		3, 0, 0, 0,
-		0, 3, 0, 0,
-		0, 0, 3, -0.2f,
-		0, 0, 0, 1);
-	Matrix4f rotation(orientation);
-	pvm = pvm * rotation;
+	Matrix4f pvm = pv * model->getModelMatrix();
 	glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
-	glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rotation);
+	glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&model->getRotationMatrix());
 
 
     glEnableVertexAttribArray(0);

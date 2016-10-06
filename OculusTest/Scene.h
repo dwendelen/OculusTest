@@ -4,6 +4,7 @@
 #include "LegoBrick.h"
 #include <memory>
 #include "MemoryManager.h"
+#include "ModelInstance.h"
 
 using namespace OVR;
 
@@ -11,8 +12,10 @@ class Scene
 {
 	GLuint program;
 	std::unique_ptr<LegoBrick> legoBrick;
+	std::unique_ptr<ModelInstance> model;
 	Quatf orientation;
 	MemoryManager& memoryManager;
+	
 public:
 	Scene(MemoryManager& memoryManager);
 	void init();
