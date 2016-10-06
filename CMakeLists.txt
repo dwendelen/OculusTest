@@ -8,6 +8,7 @@ project("OculusTest.bin")
 find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(SDL2 REQUIRED)
+find_package(OVR QUIET)
 
 include_directories (
     ${PROJECT_SOURCE_DIR}/OculusTest
@@ -41,19 +42,20 @@ target_link_libraries(OculusTestN
     ${CORE_LIBS}
 )
 
-add_executable(OculusTestO
-    ${CORE_SRC}
-    OculusTest/oculusMain.cpp
-    OculusTest/OculusCamera.cpp
-    OculusTest/OculusDisplay.cpp
-    OculusTest/OculusRenderingTarget.cpp
-    OculusTest/NormalDisplay.cpp
-	OculusTest/NormalRenderingTarget.cpp
-    OculusTest/Oculus.cpp)
-
-target_link_libraries(OculusTestO
-    ${CORE_LIBS}
-	C:/Users/Xtrit/Downloads/ovr_sdk_win_1.7.0_public/OculusSDK/LibOVR/Lib/Windows/x64/Release/VS2015/LibOVR.lib
-)
+IF(OVR_FOUND)
+    add_executable(OculusTestO
+        ${CORE_SRC}
+        OculusTest/oculusMain.cpp
+        OculusTest/OculusCamera.cpp
+        OculusTest/OculusDisplay.cpp
+        OculusTest/OculusRenderingTarget.cpp
+        OculusTest/NormalDisplay.cpp
+        OculusTest/NormalRenderingTarget.cpp
+        OculusTest/Oculus.cpp
+    )
+    target_link_libraries(OculusTestO
+        ${CORE_LIBS} ${OVR_LIBRARY}
+    )
+endif(OVR_FOUND)
 
 add_executable(testEx test.cpp)
