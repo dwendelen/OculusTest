@@ -242,7 +242,7 @@ ModelManifest.xml
 .fake/
 CMakeCache.txt
 OculusTest*
-test
+tst
 cmake_install.cmake
 CMakeFiles/
 Makefile
