@@ -39,8 +39,9 @@ void Scene::render(Matrix4f pv) {
 	GLuint rotIndex = glGetUniformLocation(program, "rot");
 
 	Matrix4f pvm = pv * model->getModelMatrix();
+    Matrix4f rot = model->getRotationMatrix();
 	glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
-	glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&model->getRotationMatrix());
+	glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rot);
 
 
     glEnableVertexAttribArray(0);
