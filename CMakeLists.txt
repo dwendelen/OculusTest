@@ -79,4 +79,4 @@ if(OVR_FOUND)
     )
 endif(OVR_FOUND)
 
-add_executable(test test.cpp)
+add_executable(tst test.cpp)

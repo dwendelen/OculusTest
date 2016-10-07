@@ -1,4 +1,7 @@
 #include "Scene.h"
+#include "LegoBrick.h"
+#include "ModelInstance.h"
+#include "MemoryManager.h"
 
 using namespace OVR;
 

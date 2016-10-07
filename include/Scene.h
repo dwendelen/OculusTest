@@ -1,10 +1,14 @@
 #pragma once
 #include "Extras/OVR_Math.h"
 #include "GL/glew.h"
-#include "LegoBrick.h"
+//#include "LegoBrick.h"
 #include <memory>
-#include "MemoryManager.h"
-#include "ModelInstance.h"
+//#include "MemoryManager.h"
+//#include "ModelInstance.h"
+
+class LegoBrick;
+class ModelInstance;
+class MemoryManager;
 
 using namespace OVR;
 
@@ -15,7 +19,7 @@ class Scene
 	std::unique_ptr<ModelInstance> model;
 	Quatf orientation;
 	MemoryManager& memoryManager;
-	
+
 public:
 	Scene(MemoryManager& memoryManager);
 	void init();
