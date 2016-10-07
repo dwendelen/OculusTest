@@ -1,7 +1,9 @@
 #pragma once
 #include "Extras/OVR_Math.h"
-#include "RenderingTarget.h"
+
 using namespace OVR;
+
+class RenderingTarget;
 
 class Camera
 {

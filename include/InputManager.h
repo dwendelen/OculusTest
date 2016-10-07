@@ -4,6 +4,9 @@
 #include "Scene.h"
 #include "VR.h"
 
+class Scene;
+class VR;
+
 class InputManager {
     private:
         Scene& scene;

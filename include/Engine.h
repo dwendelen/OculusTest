@@ -1,10 +1,12 @@
 #pragma once
-#include "Display.h"
-#include "Camera.h"
-#include "InputManager.h"
 #include <memory>
 
 using namespace std;
+
+class Display;
+class Camera;
+class VR;
+class InputManager;
 
 class Engine
 {

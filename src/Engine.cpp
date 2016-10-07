@@ -2,6 +2,10 @@
 #include "SDL.h"
 #include "Scene.h"
 #include "MemoryManager.h"
+#include "InputManager.h"
+#include "Display.h"
+#include "Camera.h"
+#include "RenderingTarget.h"
 
 Engine::Engine(Display& display, Camera& camera, VR& vr):
     display(display),

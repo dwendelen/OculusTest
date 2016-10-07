@@ -1,8 +1,9 @@
 #pragma once
-#include "Model.h"
 #include "Extras/OVR_Math.h"
 
 using namespace OVR;
+
+class Model;
 
 class ModelInstance
 {

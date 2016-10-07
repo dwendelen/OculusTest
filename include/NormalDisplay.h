@@ -1,8 +1,10 @@
 #pragma once
 
-#include "SDL.h"
+#include "SDL_video.h"
 #include "Display.h"
 #include "NormalRenderingTarget.h"
+
+class RenderingTarget;
 
 class NormalDisplay: public Display
 {

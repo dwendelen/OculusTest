@@ -1,5 +1,6 @@
 #pragma once
 #include "RenderingTarget.h"
+
 class NormalRenderingTarget :
 	public RenderingTarget
 {

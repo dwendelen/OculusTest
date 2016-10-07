@@ -1,5 +1,8 @@
 #pragma once
-#include "Model.h"
+
+#include "GL/glew.h"
+
+class Model;
 
 class MemoryManager
 {

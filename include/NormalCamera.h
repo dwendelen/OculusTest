@@ -1,9 +1,9 @@
 #pragma once
 #include "Camera.h"
-#include "NormalRenderingTarget.h"
 
-class NormalCamera :
-	public Camera
+class RenderingTarget;
+
+class NormalCamera : public Camera
 {
 	RenderingTarget& renderingTarget;
 public:

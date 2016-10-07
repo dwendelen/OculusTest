@@ -1,5 +1,11 @@
 #include "MemoryManager.h"
+#include "GL/glew.h"
+#include <vector>
+#include "Extras/OVR_Math.h"
+#include "Model.h"
 
+using namespace std;
+using namespace OVR;
 
 MemoryManager::MemoryManager()
 {}

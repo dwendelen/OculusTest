@@ -1,4 +1,5 @@
 #include "NormalDisplay.h"
+#include "SDL.h"
 #include "GL/glew.h"
 
 #include <string>
