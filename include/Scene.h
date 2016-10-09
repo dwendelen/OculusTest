@@ -1,22 +1,21 @@
 #pragma once
 #include "Extras/OVR_Math.h"
 #include "GL/glew.h"
-//#include "LegoBrick.h"
 #include <memory>
-//#include "MemoryManager.h"
-//#include "ModelInstance.h"
 
 class LegoBrick;
 class ModelInstance;
 class MemoryManager;
 
 using namespace OVR;
+using namespace std;
 
 class Scene
 {
 	GLuint program;
-	std::unique_ptr<LegoBrick> legoBrick;
-	std::unique_ptr<ModelInstance> model;
+	unique_ptr<LegoBrick> legoBrick;
+	unique_ptr<ModelInstance> model;
+
 	Quatf orientation;
 	MemoryManager& memoryManager;
 

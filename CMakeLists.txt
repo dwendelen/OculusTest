@@ -1,7 +1,7 @@
-cmake_minimum_required (VERSION 3.0)
+cmake_minimum_required (VERSION 2.8)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR})
 set(CMAKE_CXX_STANDARD 11)
-#set(CMAKE_CXX_FLAGS -std=c++11)
+set(CMAKE_CXX_FLAGS -std=c++11)
 if(APPLE)
     set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++")
 endif(APPLE)
@@ -40,7 +40,7 @@ set(CORE_SRC
 )
 set(CORE_LIBS
     ${OPENGL_LIBRARIES}
-    ${GLEW_LIBRARIES}
+    ${GLEW_LIBRARY}
     ${SDL2_LIBRARY}
 )
 
