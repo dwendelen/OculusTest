@@ -1,10 +1,10 @@
 #include <iostream>
 #include <fstream>
-#include <sys/time.h>
-#include <linux/input.h>
+//#include <sys/time.h>
+//#include <linux/input.h>
 #include <cstdio>
 #include <fcntl.h>
-#include <unistd.h>
+//#include <unistd.h>
 #include <cstdlib>
 
 using namespace std;
@@ -30,10 +30,10 @@ namespace test {
         }
     };
 
-    union myop {
+    /*union myop {
         input_event event;
         char chars[sizeof(input_event)];
-    };
+    };*/
 
 
 }
@@ -54,7 +54,7 @@ using namespace test;
         b1.f1();
         b1.f2();
 
-
+		/*
         string path(getenv("LD_LIBRARY_PATH"));
         cout << path << endl;
 
@@ -69,5 +69,5 @@ using namespace test;
         while(fd >= 0){
             read(fd, &event, sizeof(struct input_event));
             cout << "Code:" << event.code << " Type: " << event.type << " Value: " << event.value << endl;
-        }
+        }*/
     }

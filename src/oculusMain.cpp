@@ -8,6 +8,8 @@
 #include "Engine.h"
 
 using namespace OVR;
+using namespace oculus;
+using namespace video;
 
 int main(int argc, char* argv[]) {
     int width = 800;
