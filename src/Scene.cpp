@@ -4,8 +4,10 @@
 #include "MemoryManager.h"
 
 using namespace OVR;
+using namespace memory;
 
 GLuint loadProgram();
+
 Scene::Scene(MemoryManager& memoryManager):
     memoryManager(memoryManager)
 {
@@ -23,7 +25,7 @@ void Scene::init() {
 
 void Scene::rotate(Quatf rotation)
 {
-	model->rotate(rotation);
+	//model->rotate(rotation);
 }
 
 void Scene::enableWireframe() {
@@ -36,25 +38,45 @@ void Scene::disableWireframe() {
     glEnable(GL_CULL_FACE);
 }
 
+void renderr(const ModelInstance& renderedModel, const Matrix4f& pv, GLuint matrixIndex, GLuint rotIndex, int nbOfIndices, GLuint alphaIndex, float alpha) {
+    Matrix4f pvm = pv * renderedModel.getModelMatrix();
+    Matrix4f rot = renderedModel.getRotationMatrix();
+    glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
+    glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rot);
+    glUniform1f(alphaIndex, alpha);
+
+    glDrawElements(GL_TRIANGLES, nbOfIndices, GL_UNSIGNED_INT, (void*)0);
+}
+
 void Scene::render(Matrix4f pv) {
 	glUseProgram(program);
 	GLuint matrixIndex = glGetUniformLocation(program, "pvm");
 	GLuint rotIndex = glGetUniformLocation(program, "rot");
+    GLuint alphaIndex = glGetUniformLocation(program, "alpha");
 
-	Matrix4f pvm = pv * model->getModelMatrix();
-    Matrix4f rot = model->getRotationMatrix();
-	glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
-	glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rot);
-
-
-    glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
     memoryManager.bindModel();
-	glDrawElements(GL_TRIANGLES, legoBrick->getIndices().size() * 3, GL_UNSIGNED_INT, (void*)0);
-	glDrawElements(GL_LINES, legoBrick->getIndices().size() * 6, GL_UNSIGNED_INT, (void*)0);
+
+	int nbOfIndices = legoBrick->getIndices().size() * 3;
+
+	for(ModelInstance renderedModel: placedBlocks) {
+        renderr(renderedModel, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 1);
+    }
+    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0);
+    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0.5);
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
+}
+
+void Scene::move(Vector3f translation){
+    model->move(translation);
+}
+void Scene::moveTo(Vector3f position) {}
+
+void Scene::place() {
+    placedBlocks.push_back(*model);
 }
 
 Scene::~Scene()
@@ -77,10 +99,12 @@ GLuint loadProgram()
 		}";
 	const char* fragmentShader = "\
 		#version 330 core\n\
-		out vec3 color;\n\
+		out vec4 color;\n\
 		in vec3 normalO;\n\
+		uniform float alpha;\n\
 		void main() {\n\
-			color = (0.3 + (1.0+normalO.x)*0.25) * vec3(1, 1, 1);\n\
+			color = (0.3 + (1.0+normalO.x)*0.25) * vec4(1, 1, 1, 0);\n\
+			color.w = alpha;\n\
 		}";
 
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);

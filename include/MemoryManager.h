@@ -4,16 +4,18 @@
 
 class Model;
 
-class MemoryManager
-{
-    private:
-        GLuint vertexArray;
-        GLuint legoBuffer;
-        GLuint legoElements;
-    public:
-        MemoryManager();
-        void init();
-        void load(const Model& model);
-        void bindModel();
-        ~MemoryManager();
-};
+namespace memory {
+    class MemoryManager
+    {
+        private:
+            GLuint vertexArray;
+            GLuint legoBuffer;
+            GLuint legoElements;
+        public:
+            MemoryManager();
+            void init();
+            void load(const Model& model);
+            void bindModel();
+            ~MemoryManager();
+    };
+}

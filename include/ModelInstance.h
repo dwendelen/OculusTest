@@ -14,8 +14,9 @@ private:
 public:
 	ModelInstance(Model& model, Vector3f position, Quatf orientation);
 	void rotate(Quatf rotation);
+	void move(Vector3f translation);
 	const Model& getModel() { return model; }
-	Matrix4f getModelMatrix();
-	Matrix4f getRotationMatrix();
+	Matrix4f getModelMatrix() const;
+	Matrix4f getRotationMatrix() const;
 	~ModelInstance();
 };

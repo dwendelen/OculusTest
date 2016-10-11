@@ -7,23 +7,26 @@
 class Scene;
 class VR;
 
-class InputManager {
-    private:
-        Scene& scene;
-        VR& vr;
+namespace input {
+    class InputManager {
+        private:
+            Scene& scene;
+            VR& vr;
 
-        float x;
-        float y;
-        Uint32 lastTicks;
-        bool shouldQuit;
-        SDL_GameController *controller;
-        bool wireframe;
+            float x;
+            float y;
+            Uint32 lastTicks;
+            bool shouldQuit;
+            SDL_GameController *controller;
+            bool wireframe;
 
-        void quit();
-	public:
-        InputManager(Scene& scene, VR& vr);
-        void init();
-        void processInput();
-        bool isShouldQuit() { return shouldQuit; }
-        ~InputManager();
-};
+            void quit();
+            void maybeAddController(int index);
+        public:
+            InputManager(Scene& scene, VR& vr);
+            void init();
+            void processInput();
+            bool isShouldQuit() { return shouldQuit; }
+            ~InputManager();
+    };
+}

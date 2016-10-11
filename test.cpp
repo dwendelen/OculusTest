@@ -58,6 +58,9 @@ using namespace test;
         string path(getenv("LD_LIBRARY_PATH"));
         cout << path << endl;
 
+        string prl(getenv("LD_PRELOAD"));
+        cout << prl << endl;
+
         int fd;
         struct input_event event;
 

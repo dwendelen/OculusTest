@@ -1,12 +1,21 @@
 #pragma once
 #include <memory>
 
-using namespace std;
 
-class Display;
-class Camera;
+
+
+namespace video {
+    class Display;
+    class Camera;
+}
 class VR;
-class InputManager;
+namespace input {
+    class InputManager;
+}
+
+using namespace std;
+using namespace video;
+using namespace input;
 
 class Engine
 {

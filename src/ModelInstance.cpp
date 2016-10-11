@@ -15,12 +15,16 @@ void ModelInstance::rotate(Quatf rotation)
 	}
 }
 
-Matrix4f ModelInstance::getModelMatrix()
+void ModelInstance::move(Vector3f translation) {
+    position += translation;
+}
+
+Matrix4f ModelInstance::getModelMatrix() const
 {
 	return Matrix4f::Translation(position) * Matrix4f(orientation);
 }
 
-Matrix4f ModelInstance::getRotationMatrix()
+Matrix4f ModelInstance::getRotationMatrix() const
 {
 	return Matrix4f(orientation);
 }

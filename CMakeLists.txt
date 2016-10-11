@@ -12,6 +12,7 @@ find_package(OpenGL REQUIRED)
 find_package(GLEW REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(OVR QUIET)
+find_package(Vulkan QUIET)
 
 include_directories (
     ${PROJECT_SOURCE_DIR}/include
@@ -59,6 +60,7 @@ target_link_libraries(OculusTestN
 )
 
 if(OVR_FOUND)
+    message("Found Oculus")
     add_executable(OculusTestO
         ${CORE_SRC}
         OculusTest/oculusMain.cpp
@@ -78,5 +80,16 @@ if(OVR_FOUND)
         ${CORE_LIBS} ${OVR_LIBRARY}
     )
 endif(OVR_FOUND)
+
+if(Vulkan_FOUND)
+    message("Found Vulkan")
+    include_directories(${Vulkan_INCLUDE_DIRS})
+    add_executable(OculusV
+        ${CORE_SRC}
+    )
+    target_link_libraries(OculusV
+        ${CORE_LIBS} ${Vulkan_LIBRARIES}
+    )
+endif(Vulkan_FOUND)
 
 add_executable(tst test.cpp)

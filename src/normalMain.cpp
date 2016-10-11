@@ -1,6 +1,6 @@
 #include <memory>
 
-#include "NormalCamera.h"
+#include "DefaultCamera.h"
 #include "NormalDisplay.h"
 
 #include "Engine.h"
@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
 	std::unique_ptr<NormalDisplay> normalDisplay(new NormalDisplay(width, height));
 	normalDisplay->init();
 
-	std::unique_ptr<Camera> camera(new NormalCamera(normalDisplay->getRenderingTarget()));;
+	std::unique_ptr<Camera> camera(new DefaultCamera(normalDisplay->getRenderingTarget()));;
     NullVR nullVR;
 	Engine engine(*normalDisplay, *camera, nullVR);
 	engine.run();
