@@ -75,6 +75,9 @@ namespace input {
                             case SDL_CONTROLLER_BUTTON_A:
                                     scene.place();
                                     break;
+                            case SDL_CONTROLLER_BUTTON_X:
+                                    scene.changeColor();
+                                    break;
                             case SDL_CONTROLLER_BUTTON_DPAD_UP:
                                     scene.move(Vector3f(0, 0, -0.016f));
                                     break;

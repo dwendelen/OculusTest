@@ -9,9 +9,17 @@ using namespace memory;
 GLuint loadProgram();
 
 Scene::Scene(MemoryManager& memoryManager):
-    memoryManager(memoryManager)
+    memoryManager(memoryManager),
+    colorIndex(0)
 {
 }
+
+const vector<Vector3f> colors = {
+    Vector3f(1.0f, 1.0f, 1.0f),
+    Vector3f(1.0f, 0.0f, 0.0f),
+    Vector3f(0.0f, 1.0f, 0.0f),
+    Vector3f(0.0f, 0.0f, 1.0f)
+};
 
 void Scene::init() {
 	orientation = Quatf(0.0f, 0.0f, 0.0f, 1.0f);
@@ -20,6 +28,7 @@ void Scene::init() {
 	legoBrick.reset(new LegoBrick());
 	legoBrick->init();
 	model.reset(new ModelInstance(*legoBrick, Vector3f(0.0f, 0.0f, -0.2f), orientation));
+    model->setColor(colors[0]);
     memoryManager.load(*legoBrick);
 }
 
@@ -38,12 +47,13 @@ void Scene::disableWireframe() {
     glEnable(GL_CULL_FACE);
 }
 
-void renderr(const ModelInstance& renderedModel, const Matrix4f& pv, GLuint matrixIndex, GLuint rotIndex, int nbOfIndices, GLuint alphaIndex, float alpha) {
+void renderr(const ModelInstance& renderedModel, const Matrix4f& pv, GLuint matrixIndex, GLuint rotIndex, int nbOfIndices, GLuint alphaIndex, float alpha, GLuint baseColorIndex) {
     Matrix4f pvm = pv * renderedModel.getModelMatrix();
     Matrix4f rot = renderedModel.getRotationMatrix();
     glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
     glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rot);
     glUniform1f(alphaIndex, alpha);
+    glUniform3f(baseColorIndex, renderedModel.getColor().x, renderedModel.getColor().y, renderedModel.getColor().z);
 
     glDrawElements(GL_TRIANGLES, nbOfIndices, GL_UNSIGNED_INT, (void*)0);
 }
@@ -53,6 +63,7 @@ void Scene::render(Matrix4f pv) {
 	GLuint matrixIndex = glGetUniformLocation(program, "pvm");
 	GLuint rotIndex = glGetUniformLocation(program, "rot");
     GLuint alphaIndex = glGetUniformLocation(program, "alpha");
+    GLuint baseColorIndex = glGetUniformLocation(program, "baseColor");
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -61,10 +72,10 @@ void Scene::render(Matrix4f pv) {
 	int nbOfIndices = legoBrick->getIndices().size() * 3;
 
 	for(ModelInstance renderedModel: placedBlocks) {
-        renderr(renderedModel, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 1);
+        renderr(renderedModel, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 1, baseColorIndex);
     }
-    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0);
-    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0.5);
+    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0, baseColorIndex);
+    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0.5, baseColorIndex);
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
@@ -74,6 +85,11 @@ void Scene::move(Vector3f translation){
     model->move(translation);
 }
 void Scene::moveTo(Vector3f position) {}
+
+void Scene::changeColor() {
+    colorIndex = (colorIndex + 1) % colors.size();
+    model->setColor(colors[colorIndex]);
+}
 
 void Scene::place() {
     placedBlocks.push_back(*model);
@@ -102,8 +118,9 @@ GLuint loadProgram()
 		out vec4 color;\n\
 		in vec3 normalO;\n\
 		uniform float alpha;\n\
+		uniform vec3 baseColor;\n\
 		void main() {\n\
-			color = (0.3 + (1.0+normalO.x)*0.25) * vec4(1, 1, 1, 0);\n\
+			color.xyz = (0.3 + (1.0+normalO.x)*0.25) * baseColor;\n\
 			color.w = alpha;\n\
 		}";
 

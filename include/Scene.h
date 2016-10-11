@@ -24,6 +24,7 @@ class Scene
 
 	Quatf orientation;
 	MemoryManager& memoryManager;
+	int colorIndex;
 
 public:
 	Scene(MemoryManager& memoryManager);
@@ -32,6 +33,7 @@ public:
 	void move(Vector3f translation);
 	void moveTo(Vector3f position);
 	void place();
+	void changeColor();
 	void render(Matrix4f pv);
 	void enableWireframe();
 	void disableWireframe();
