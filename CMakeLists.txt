@@ -63,18 +63,19 @@ if(OVR_FOUND)
     message("Found Oculus")
     add_executable(OculusTestO
         ${CORE_SRC}
-        OculusTest/oculusMain.cpp
+        src/OculusMain.cpp
         include/OculusCamera.h
-        OculusTest/OculusCamera.cpp
+        src/OculusCamera.cpp
         include/OculusDisplay.h
-        OculusTest/OculusDisplay.cpp
+        src/OculusDisplay.cpp
         include/OculusRenderingTarget.h
-        OculusTest/OculusRenderingTarget.cpp
+        src/OculusRenderingTarget.cpp
         include/NormalDisplay.h
         src/NormalDisplay.cpp
         include/NormalRenderingTarget.h
         src/NormalRenderingTarget.cpp
-        OculusTest/Oculus.cpp
+        include/Oculus.h
+        src/Oculus.cpp
     )
     target_link_libraries(OculusTestO
         ${CORE_LIBS} ${OVR_LIBRARY}
