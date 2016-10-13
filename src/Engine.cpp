@@ -7,7 +7,7 @@
 #include "Camera.h"
 #include "RenderingTarget.h"
 
-Engine::Engine(Display& display, Camera& camera, VR& vr):
+Engine::Engine(Displayy& display, Camera& camera, VR& vr):
     display(display),
     camera(camera),
     vr(vr)

@@ -1,14 +1,14 @@
 #pragma once
 
 namespace video {
-    class Display
+    class Displayy
     {
     public:
-        Display() {};
+        Displayy() {};
         virtual void swap() {};
         virtual void prepareForNewFrame() {};
         virtual int getWidth() = 0;
         virtual int getHeight() = 0;
-        virtual ~Display() {};
+        virtual ~Displayy() {};
     };
 }

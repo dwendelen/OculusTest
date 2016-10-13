@@ -5,7 +5,7 @@
 
 
 namespace video {
-    class Display;
+    class Displayy;
     class Camera;
 }
 class VR;
@@ -19,12 +19,12 @@ using namespace input;
 
 class Engine
 {
-	Display& display;
+	Displayy& display;
 	Camera& camera;
 	VR& vr;
 	unique_ptr<InputManager> inputManager;
 public:
-	Engine(Display& display, Camera& camera, VR& vr);
+	Engine(Displayy& display, Camera& camera, VR& vr);
 	void run();
 	~Engine();
 };

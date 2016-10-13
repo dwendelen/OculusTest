@@ -95,9 +95,6 @@ namespace input {
                     case SDL_CONTROLLERBUTTONUP:
                         switch (windowEvent.cbutton.button) {
                             case SDL_CONTROLLER_BUTTON_BACK:
-                                /*if (oculus) {
-                                    ovr_RecenterTrackingOrigin(oculus->getSession());
-                                }*/
                                 vr.recenter();
                                 break;
                             case SDL_CONTROLLER_BUTTON_START:
@@ -127,20 +124,6 @@ namespace input {
                         break;
                 }
             }
-
-            /*if (oculus) {
-                ovrSessionStatus sessionStatus;
-                ovr_GetSessionStatus(oculus->getSession(), &sessionStatus);
-                if (sessionStatus.ShouldQuit)
-                    break;
-                if (sessionStatus.ShouldRecenter)
-                    ovr_RecenterTrackingOrigin(oculus->getSession());
-                ovrInputState input;
-                ovr_GetInputState(oculus->getSession(), ovrControllerType_XBox, &input);
-                if (input.Buttons & ovrButton_Back) {
-                    input = ovrInputState();
-                }
-            }*/
 
             float radiantsPerMilisec = 0.003f;
             Quatf rotation = Quatf(Vector3f(0, 1, 0), radiantsPerMilisec * elapsedMilis * x);

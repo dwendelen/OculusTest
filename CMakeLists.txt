@@ -83,13 +83,26 @@ if(OVR_FOUND)
 endif(OVR_FOUND)
 
 if(Vulkan_FOUND)
+    find_package(X11_XCB REQUIRED)
     message("Found Vulkan")
-    include_directories(${Vulkan_INCLUDE_DIRS})
+    include_directories(
+        ${Vulkan_INCLUDE_DIR}
+        ${PROJECT_SOURCE_DIR}/src/vulkan
+    )
     add_executable(OculusV
         ${CORE_SRC}
+        src/vulkanMain.cpp
+        src/vulkan/VulkanContext.h
+        src/vulkan/VulkanContext.cpp
+        src/vulkan/VulkanDebug.h
+        src/vulkan/VulkanDebug.cpp
+        src/vulkan/VulkanDisplay.h
+        src/vulkan/VulkanDisplay.cpp
     )
     target_link_libraries(OculusV
-        ${CORE_LIBS} ${Vulkan_LIBRARIES}
+        ${CORE_LIBS}
+        ${Vulkan_LIBRARIES}
+        ${X11_XCB_LIBRARIES}
     )
 endif(Vulkan_FOUND)
 
