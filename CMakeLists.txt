@@ -89,7 +89,7 @@ if(Vulkan_FOUND)
         ${Vulkan_INCLUDE_DIR}
         ${PROJECT_SOURCE_DIR}/src/vulkan
     )
-    add_executable(OculusV
+    add_executable(OculusTestV
         ${CORE_SRC}
         src/vulkanMain.cpp
         src/vulkan/VulkanContext.h
@@ -101,7 +101,7 @@ if(Vulkan_FOUND)
         src/vulkan/VulkanRenderPass.h
         src/vulkan/VulkanRenderPass.cpp
     )
-    target_link_libraries(OculusV
+    target_link_libraries(OculusTestV
         ${CORE_LIBS}
         ${Vulkan_LIBRARIES}
         ${X11_XCB_LIBRARIES}
