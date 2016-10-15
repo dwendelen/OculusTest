@@ -98,6 +98,8 @@ if(Vulkan_FOUND)
         src/vulkan/VulkanDebug.cpp
         src/vulkan/VulkanDisplay.h
         src/vulkan/VulkanDisplay.cpp
+        src/vulkan/VulkanRenderPass.h
+        src/vulkan/VulkanRenderPass.cpp
     )
     target_link_libraries(OculusV
         ${CORE_LIBS}

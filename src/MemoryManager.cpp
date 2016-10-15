@@ -14,6 +14,16 @@ namespace memory
     {
         glGenVertexArrays(1, &vertexArray);
         glBindVertexArray(vertexArray);
+        glGenBuffers(2, uniformBuffers);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffers[0]);
+        glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float) * 4 * 4, NULL, GL_STREAM_DRAW);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffers[1]);
+        glBufferData(GL_UNIFORM_BUFFER, sizeof(float) * 4, NULL, GL_STREAM_DRAW);
+
+        glBindBufferBase(GL_UNIFORM_BUFFER, 0, uniformBuffers[0]);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 1, uniformBuffers[1]);
     }
 
     void MemoryManager::load(const Model& model)
@@ -36,10 +46,29 @@ namespace memory
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, legoElements);
     }
 
+    void MemoryManager::setUniform(Matrix4f mvp, Matrix4f rot, Vector4f color) {
+        struct matr {
+            Matrix4f mvp;
+            Matrix4f rot;
+        };
+
+        struct matr data = {
+            mvp.Transposed(),
+            rot.Transposed()
+        };
+
+        glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffers[0]);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(data), &data);
+
+        glBindBuffer(GL_UNIFORM_BUFFER, uniformBuffers[1]);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(color), &color);
+    }
+
     MemoryManager::~MemoryManager()
     {
         glDeleteBuffers(1, &legoBuffer);
         glDeleteBuffers(1, &legoElements);
         glDeleteVertexArrays(1, &vertexArray);
+        glDeleteBuffers(2, uniformBuffers);
     }
 }

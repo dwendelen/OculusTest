@@ -7,6 +7,12 @@
 #include "Camera.h"
 #include "RenderingTarget.h"
 
+
+#include <iostream>
+#include "GL/glew.h"
+
+ using namespace std;
+
 Engine::Engine(Displayy& display, Camera& camera, VR& vr):
     display(display),
     camera(camera),
@@ -17,6 +23,7 @@ Engine::Engine(Displayy& display, Camera& camera, VR& vr):
 void Engine::run() {
     MemoryManager loader;
     loader.init();
+
 	Scene scene(loader);
 	scene.init();
 

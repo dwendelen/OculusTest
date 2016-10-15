@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "NullVR.h"
 
+using namespace std;
 using namespace OVR;
 
 int main(int argc, char* argv[]) {
@@ -16,6 +17,7 @@ int main(int argc, char* argv[]) {
 	normalDisplay->init();
 
 	std::unique_ptr<Camera> camera(new DefaultCamera(normalDisplay->getRenderingTarget()));;
+
     NullVR nullVR;
 	Engine engine(*normalDisplay, *camera, nullVR);
 	engine.run();

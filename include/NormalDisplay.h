@@ -7,7 +7,7 @@
 namespace video {
     class RenderingTarget;
 
-    class NormalDisplay: public Display
+    class NormalDisplay: public Displayy
     {
         SDL_Window* window;
         SDL_GLContext context;

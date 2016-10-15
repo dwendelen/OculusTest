@@ -16,8 +16,11 @@ namespace vulkan
         VulkanContext& vulkanContext;
         SDL_Window* window;
         VkSurfaceKHR surface;
+        VkSwapchainKHR swapChain;
+        int height;
+        int width;
     public:
-        VulkanDisplay(VulkanContext& vulkanContext);
+        VulkanDisplay(VulkanContext& vulkanContext, int width, int height);
         virtual void swap();
         void init();
         virtual void prepareForNewFrame() {}

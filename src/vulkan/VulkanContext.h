@@ -25,6 +25,7 @@ namespace vulkan
             VulkanContext();
             void init();
             VkInstance getInstance() { return instance; }
+            VkDevice getDevice() { return device; }
             ~VulkanContext();
     };
 }

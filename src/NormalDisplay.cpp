@@ -19,7 +19,7 @@ namespace video
             throw new runtime_error("Could not init SDL: " + string(SDL_GetError()));
         }
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 
@@ -33,13 +33,18 @@ namespace video
             throw new runtime_error("Could not create OpenGL context: " + string(SDL_GetError()));
         }
 
-
         glewExperimental = GL_TRUE;
         GLenum glewError = glewInit();
         if (glewError != GLEW_OK)
         {
             throw new runtime_error("Error initializing GLEW: " + string((char *)glewGetErrorString(glewError)));
         }
+
+        GLenum err;
+        while((err = glGetError()) != GL_NO_ERROR) {
+            cerr << "Opengl error caused by Glew: " << err << endl;
+        }
+
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glDepthFunc(GL_LEQUAL);

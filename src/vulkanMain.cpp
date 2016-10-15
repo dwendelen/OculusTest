@@ -2,6 +2,7 @@
 
 #include "VulkanContext.h"
 #include "VulkanDisplay.h"
+#include "VulkanRenderPass.h"
 
 using namespace std;
 
@@ -10,9 +11,12 @@ using namespace vulkan;
 
 int main(int argc, char* argv[])
 {
-    VulkanContext VulkanContext;
-    VulkanContext.init();
+    VulkanContext vulkanContext;
+    vulkanContext.init();
 
-    VulkanDisplay vulkanDisplay(VulkanContext);
+    VulkanDisplay vulkanDisplay(vulkanContext, 800, 600);
     vulkanDisplay.init();
+
+    VulkanRenderPass renderPass(vulkanContext, 800, 600);
+    renderPass.init();
 }

@@ -2,9 +2,12 @@
 #include "LegoBrick.h"
 #include "ModelInstance.h"
 #include "MemoryManager.h"
+#include <string>
+#include <fstream>
 
 using namespace OVR;
 using namespace memory;
+using namespace std;
 
 GLuint loadProgram();
 
@@ -47,23 +50,17 @@ void Scene::disableWireframe() {
     glEnable(GL_CULL_FACE);
 }
 
-void renderr(const ModelInstance& renderedModel, const Matrix4f& pv, GLuint matrixIndex, GLuint rotIndex, int nbOfIndices, GLuint alphaIndex, float alpha, GLuint baseColorIndex) {
+void renderr(const ModelInstance& renderedModel, const Matrix4f& pv, int nbOfIndices, float alpha, MemoryManager& memoryManager) {
     Matrix4f pvm = pv * renderedModel.getModelMatrix();
     Matrix4f rot = renderedModel.getRotationMatrix();
-    glUniformMatrix4fv(matrixIndex, 1, GL_TRUE, (float*)&pvm);
-    glUniformMatrix4fv(rotIndex, 1, GL_TRUE, (float*)&rot);
-    glUniform1f(alphaIndex, alpha);
-    glUniform3f(baseColorIndex, renderedModel.getColor().x, renderedModel.getColor().y, renderedModel.getColor().z);
+
+    memoryManager.setUniform(pvm, rot, Vector4f(renderedModel.getColor(), alpha));
 
     glDrawElements(GL_TRIANGLES, nbOfIndices, GL_UNSIGNED_INT, (void*)0);
 }
 
 void Scene::render(Matrix4f pv) {
 	glUseProgram(program);
-	GLuint matrixIndex = glGetUniformLocation(program, "pvm");
-	GLuint rotIndex = glGetUniformLocation(program, "rot");
-    GLuint alphaIndex = glGetUniformLocation(program, "alpha");
-    GLuint baseColorIndex = glGetUniformLocation(program, "baseColor");
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
@@ -72,10 +69,11 @@ void Scene::render(Matrix4f pv) {
 	int nbOfIndices = legoBrick->getIndices().size() * 3;
 
 	for(ModelInstance renderedModel: placedBlocks) {
-        renderr(renderedModel, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 1, baseColorIndex);
+        renderr(renderedModel, pv, nbOfIndices, 1, memoryManager);
     }
-    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0, baseColorIndex);
-    renderr(*model, pv, matrixIndex, rotIndex, nbOfIndices, alphaIndex, 0.5, baseColorIndex);
+
+    renderr(*model, pv, nbOfIndices, 0, memoryManager);
+    renderr(*model, pv, nbOfIndices, 0.5f, memoryManager);
 
 	glDisableVertexAttribArray(1);
 	glDisableVertexAttribArray(0);
@@ -100,29 +98,28 @@ Scene::~Scene()
 
 }
 
+string loadFile(string filename)
+{
+    ifstream t(filename);
+    if(t.bad() || t.fail()) {
+        throw new runtime_error("Could not read " + filename);
+    }
+    t.seekg(0, std::ios::end);
+    size_t size = t.tellg();
+    string buffer(size, ' ');
+    t.seekg(0);
+    t.read(&buffer[0], size);
+    t.close();
+    return buffer;
+}
+
 GLuint loadProgram()
 {
-	const char* vertexShader = "\
-		#version 330 core\n\
-		layout(location = 0) in vec3 vertex;\n\
-		layout(location = 1) in vec3 nml;\n\
-		out vec3 normalO;\n\
-		uniform mat4 pvm;\n\
-		uniform mat4 rot;\n\
-		void main() {\n\
-			gl_Position = pvm * vec4(vertex, 1);\n\
-			normalO = vec3(rot * vec4(nml, 1));\n\
-		}";
-	const char* fragmentShader = "\
-		#version 330 core\n\
-		out vec4 color;\n\
-		in vec3 normalO;\n\
-		uniform float alpha;\n\
-		uniform vec3 baseColor;\n\
-		void main() {\n\
-			color.xyz = (0.3 + (1.0+normalO.x)*0.25) * baseColor;\n\
-			color.w = alpha;\n\
-		}";
+    string vertexShader = loadFile("shaders/vert.vert");
+    string fragmentShader = loadFile("shaders/frag.frag");
+
+    const char * pVertexShader = vertexShader.c_str();
+    const char * pFragmentShader = fragmentShader.c_str();
 
 	GLuint VertexShaderID = glCreateShader(GL_VERTEX_SHADER);
 	GLuint FragmentShaderID = glCreateShader(GL_FRAGMENT_SHADER);
@@ -131,14 +128,14 @@ GLuint loadProgram()
 	char errorMsg[2048];
 	GLsizei l;
 
-	glShaderSource(VertexShaderID, 1, &vertexShader, NULL);
+	glShaderSource(VertexShaderID, 1, &pVertexShader, NULL);
 	glCompileShader(VertexShaderID);
 	glGetShaderiv(VertexShaderID, GL_COMPILE_STATUS, &Result);
 	glGetShaderInfoLog(VertexShaderID, 2048, &l, errorMsg);
 	printf("Vertex problem: %s\n", errorMsg);
 
 
-	glShaderSource(FragmentShaderID, 1, &fragmentShader, NULL);
+	glShaderSource(FragmentShaderID, 1, &pFragmentShader, NULL);
 	glCompileShader(FragmentShaderID);
 	glGetShaderiv(FragmentShaderID, GL_COMPILE_STATUS, &Result);
 	glGetShaderInfoLog(FragmentShaderID, 2048, &l, errorMsg);
