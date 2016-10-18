@@ -16,6 +16,7 @@ namespace vulkan
             VkDevice device;
             VkQueue queue;
             uint32_t queueFamilyIndex;
+            VkCommandPool commandPool;
 
             void createInstance();
             void createDevice();
@@ -26,6 +27,7 @@ namespace vulkan
             void init();
             VkInstance getInstance() { return instance; }
             VkDevice getDevice() { return device; }
+            VkCommandPool getCommandPool() { return commandPool; }
             ~VulkanContext();
     };
 }

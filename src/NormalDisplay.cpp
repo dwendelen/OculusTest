@@ -4,6 +4,7 @@
 
 #include <string>
 #include <stdexcept>
+#include <iostream>
 
 using namespace std;
 
@@ -19,7 +20,7 @@ namespace video
             throw new runtime_error("Could not init SDL: " + string(SDL_GetError()));
         }
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+        SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
         SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
 

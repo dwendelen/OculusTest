@@ -1,25 +1,33 @@
 #include "VulkanDisplay.h"
 
 #include "VulkanContext.h"
+#include "VulkanRenderPass.h"
+
 #include "SDL2/SDL_syswm.h"
 #include <X11/Xlib-xcb.h>
-#include <exception>
+#include <stdexcept>
 #include <string>
 
 #define VK_USE_PLATFORM_XCB_KHR 1
 #include "vulkan/vulkan.h"
 
+#include "iostream"
+
 using namespace std;
 
 namespace vulkan
 {
-    VulkanDisplay::VulkanDisplay(VulkanContext& vulkanContext, int width, int height):
+    VulkanDisplay::VulkanDisplay(VulkanContext& vulkanContext, VulkanRenderPass& renderPass, int width, int height):
         vulkanContext(vulkanContext),
+        renderPass(renderPass),
         surface(VK_NULL_HANDLE),
         swapChain(VK_NULL_HANDLE),
         window(nullptr),
         height(height),
-        width(width)
+        width(width),
+        depthImage(VK_NULL_HANDLE),
+        depthMemory(VK_NULL_HANDLE),
+        depthView(VK_NULL_HANDLE)
     {}
 
     void VulkanDisplay::init() {
@@ -74,6 +82,57 @@ namespace vulkan
         if(result != VK_SUCCESS) {
             throw new runtime_error("Could not create swapchain");
         }
+
+        cout << "Create depth stuff" << endl;
+
+        vector<VkImage> images = getVector(vkGetSwapchainImagesKHR, vulkanContext.getDevice(), swapChain, "Could not get swapChain images");
+        for(VkImage image: images) {
+            VkImageView view;
+            VkImageViewCreateInfo viewInfo = {};
+            viewInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
+            viewInfo.pNext = nullptr;
+            viewInfo.flags = 0;
+            viewInfo.image = image;
+            viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
+            viewInfo.format = VK_FORMAT_B8G8R8A8_UNORM;
+            viewInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+            viewInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+            viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+            viewInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+            viewInfo.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+            viewInfo.subresourceRange.baseMipLevel = 0;
+            viewInfo.subresourceRange.levelCount = 1;
+            viewInfo.subresourceRange.baseArrayLayer = 0;
+            viewInfo.subresourceRange.layerCount = 1;
+
+            result = vkCreateImageView(vulkanContext.getDevice(), &viewInfo, nullptr, &view);
+            if(result != VK_SUCCESS) {
+                throw new runtime_error("Could not create image views");
+            }
+            views.push_back(view);
+
+            VkImageView attachments[] = {view, /*depthView*/ view};
+
+            VkFramebufferCreateInfo framebufferInfo = {};
+            framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
+            framebufferInfo.renderPass = renderPass.getRenderPass();
+            framebufferInfo.attachmentCount = 2;
+            framebufferInfo.pAttachments = &view;
+            framebufferInfo.width = width;
+            framebufferInfo.height = height;
+            framebufferInfo.layers = 1;
+
+            VkFramebuffer framebuffer;
+            result = vkCreateFramebuffer(vulkanContext.getDevice(), &framebufferInfo, nullptr, &framebuffer);
+            if (result != VK_SUCCESS) {
+                throw runtime_error("Could not create framebuffer");
+            }
+            framebuffers.push_back(framebuffer);
+
+
+        }
+
+
     }
 
     void VulkanDisplay::swap() {
@@ -81,6 +140,16 @@ namespace vulkan
 
     VulkanDisplay::~VulkanDisplay()
     {
+        for(VkFramebuffer framebuffer: framebuffers) {
+            vkDestroyFramebuffer(vulkanContext.getDevice(), framebuffer, nullptr);
+        }
+        framebuffers.clear();
+
+        for(VkImageView view: views) {
+            vkDestroyImageView(vulkanContext.getDevice(), view, nullptr);
+        }
+        views.clear();
+
         if(swapChain) {
             vkDestroySwapchainKHR(vulkanContext.getDevice(), swapChain, nullptr);
             swapChain = VK_NULL_HANDLE;

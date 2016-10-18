@@ -64,7 +64,16 @@ void Scene::render(Matrix4f pv) {
 
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
+
+	GLuint matricesIndex = glGetUniformBlockIndex(program, "Matrices");
+	glUniformBlockBinding(program, matricesIndex, 0);
+	GLuint colorIndices = glGetUniformBlockIndex(program, "ColorUniform");
+	glUniformBlockBinding(program, colorIndices, 1);
+
+
     memoryManager.bindModel();
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(0));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(float), (void*)(3 * sizeof(float)));
 
 	int nbOfIndices = legoBrick->getIndices().size() * 3;
 
@@ -115,8 +124,8 @@ string loadFile(string filename)
 
 GLuint loadProgram()
 {
-    string vertexShader = loadFile("shaders/vert.vert");
-    string fragmentShader = loadFile("shaders/frag.frag");
+    string vertexShader = loadFile("shaders/vert_150.vert");
+    string fragmentShader = loadFile("shaders/frag_150.frag");
 
     const char * pVertexShader = vertexShader.c_str();
     const char * pFragmentShader = fragmentShader.c_str();

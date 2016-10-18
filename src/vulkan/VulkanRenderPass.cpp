@@ -238,7 +238,6 @@ namespace vulkan
         layoutInfo.pushConstantRangeCount = 0;
         layoutInfo.pPushConstantRanges = nullptr;
 
-        VkPipelineLayout layout; //TODO STORE AND DELETE
         r = vkCreatePipelineLayout(vulkanContext.getDevice(), &layoutInfo, nullptr, &layout);
         if(r != VK_SUCCESS) {
             throw new runtime_error("Could not create layout");
@@ -327,8 +326,6 @@ namespace vulkan
         pipelineInfo.subpass = 0;
         pipelineInfo.basePipelineHandle = 0;
         pipelineInfo.basePipelineIndex = 0;
-
-        VkPipeline pipeline; //TODO STORE AND DELETE
 
         r = vkCreateGraphicsPipelines(vulkanContext.getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline);
         if(r != VK_SUCCESS) {

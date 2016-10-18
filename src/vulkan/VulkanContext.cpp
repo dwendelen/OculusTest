@@ -3,39 +3,15 @@
 #include "VulkanDebug.h"
 #include <vector>
 #include <exception>
+#include <VulkanUtils.h>
 
 namespace vulkan
 {
-    template<typename E, typename R>
-    vector<R> getVector(
-        VkResult(*func)(E, uint32_t*, R*),
-        E entity, string errorMessage)
-    {
-        uint32_t count;
-        if(func(entity, &count, nullptr) != VK_SUCCESS) {
-            throw new runtime_error(errorMessage);
-        }
-        vector<R> result(count);
-        if(func(entity, &count, result.data()) != VK_SUCCESS) {
-            throw new runtime_error(errorMessage);
-        }
-        return result;
-    }
-
-    template<typename E, typename R>
-    vector<R> getVector(void(*func)(E, uint32_t*, R*), E entity)
-    {
-        uint32_t count;
-        func(entity, &count, nullptr);
-        vector<R> result(count);
-        func(entity, &count, result.data());
-        return result;
-    }
-
     VulkanContext::VulkanContext():
         instance(VK_NULL_HANDLE),
         device(VK_NULL_HANDLE),
-        queue(VK_NULL_HANDLE) {}
+        queue(VK_NULL_HANDLE),
+        commandPool(VK_NULL_HANDLE) {}
 
     void VulkanContext::init()
     {
@@ -45,6 +21,17 @@ namespace vulkan
 
         createDevice();
         vkGetDeviceQueue(device, queueFamilyIndex, 0, &queue);
+
+        VkCommandPoolCreateInfo poolInfo = {};
+        poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+        poolInfo.pNext = nullptr;
+        poolInfo.flags = 0;
+        poolInfo.queueFamilyIndex = queueFamilyIndex;
+
+        VkResult r = vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool);
+        if(r != VK_SUCCESS) {
+            throw new runtime_error("Could not create command pool");
+        }
     }
 
     void VulkanContext::createInstance()
@@ -162,6 +149,9 @@ namespace vulkan
     }
     VulkanContext::~VulkanContext()
     {
+        if(commandPool) {
+            vkDestroyCommandPool(device, commandPool, nullptr);
+        }
         debug.reset(); //Must be destroyed before the instance
         if(device) {
             vkDestroyDevice(device, nullptr);

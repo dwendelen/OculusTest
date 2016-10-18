@@ -31,6 +31,8 @@ namespace vulkan
         public:
             VulkanRenderPass(VulkanContext& vulkanContext, int width, int height);
             void init();
+            VkRenderPass getRenderPass() { return renderPass; }
+            VkPipeline getPipeline() { return pipeline; }
             ~VulkanRenderPass();
     };
 }

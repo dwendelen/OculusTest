@@ -91,6 +91,7 @@ if(Vulkan_FOUND)
     )
     add_executable(OculusTestV
         ${CORE_SRC}
+        src/vulkan/VulkanUtils.h
         src/vulkanMain.cpp
         src/vulkan/VulkanContext.h
         src/vulkan/VulkanContext.cpp
@@ -100,6 +101,8 @@ if(Vulkan_FOUND)
         src/vulkan/VulkanDisplay.cpp
         src/vulkan/VulkanRenderPass.h
         src/vulkan/VulkanRenderPass.cpp
+        src/vulkan/VulkanCommands.h
+        src/vulkan/VulkanCommands.cpp
     )
     target_link_libraries(OculusTestV
         ${CORE_LIBS}
