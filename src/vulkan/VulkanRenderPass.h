@@ -33,6 +33,7 @@ namespace vulkan
             void init();
             VkRenderPass getRenderPass() { return renderPass; }
             VkPipeline getPipeline() { return pipeline; }
+            VkPipelineLayout getLayout() { return layout; }
             ~VulkanRenderPass();
     };
 }

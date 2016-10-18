@@ -57,11 +57,43 @@ namespace vulkan
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
             vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass.getPipeline());
+/*
+            vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass.getLayout(), 0,
 
-            //vkCmdBindDescriptorSets()
-            //vkCmdBindVertexBuffers()
-            //vkCmdBindIndexBuffer()
-            //vkCmdDrawIndexed(commandBuffers[i], )
+    uint32_t                                    descriptorSetCount,
+    const VkDescriptorSet*                      pDescriptorSets,
+    uint32_t                                    0,
+    const uint32_t*                             nullptr);
+
+*/
+            /*
+
+            vkCmdBindVertexBuffers(
+            VkCommandBuffer                             commandBuffer,
+    uint32_t                                    firstBinding,
+    uint32_t                                    bindingCount,
+    const VkBuffer*                             pBuffers,
+    const VkDeviceSize*                         pOffsets
+            )
+            */
+            /*
+            vkCmdBindIndexBuffer(
+            VkCommandBuffer                             commandBuffer,
+    VkBuffer                                    buffer,
+    VkDeviceSize                                offset,
+    VkIndexType                                 VK_INDEX_TYPE_UINT16
+            )
+            */
+            /*
+            vkCmdDrawIndexed(commandBuffers[i],
+
+    uint32_t                                    indexCount,
+    uint32_t                                    instanceCount,
+    uint32_t                                    firstIndex,
+    int32_t                                     vertexOffset,
+    uint32_t                                    firstInstance);
+            )
+            */
             vkCmdEndRenderPass(commandBuffers[i]);
             r = vkEndCommandBuffer(commandBuffers[i]);
             if(r != VK_SUCCESS) {
