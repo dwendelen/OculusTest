@@ -4,6 +4,8 @@
 #include <string>
 #include <stdexcept>
 
+#include "VulkanFwd.h"
+
 using namespace std;
 namespace vulkan
 {

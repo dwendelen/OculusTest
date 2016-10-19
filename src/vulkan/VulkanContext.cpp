@@ -91,6 +91,7 @@ namespace vulkan
 
         VkPhysicalDevice physicalDevice = getPhysicalDevice();
         queueFamilyIndex = getQueueFamilyIndex(physicalDevice);
+        memoryTypeIndex = calculateMemoryTypeIndex(physicalDevice);
 
         float prio[] = {1.0f};
         VkDeviceQueueCreateInfo queueCreateInfo;
@@ -147,6 +148,16 @@ namespace vulkan
 
         throw new runtime_error("No graphics queue found");
     }
+
+    uint32_t VulkanContext::calculateMemoryTypeIndex(VkPhysicalDevice device)
+    {
+        VkPhysicalDeviceMemoryProperties props;
+        vkGetPhysicalDeviceMemoryProperties(device, &props);
+
+
+        throw new runtime_error("No appropriate device found");
+    }
+
     VulkanContext::~VulkanContext()
     {
         if(commandPool) {

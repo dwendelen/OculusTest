@@ -1,19 +1,17 @@
 #pragma once
 #include "Display.h"
 #include "SDL2/SDL.h"
-#define VK_USE_PLATFORM_XCB_KHR 1
-#include "vulkan/vulkan.h"
+
 #include <vector>
 #include <VulkanUtils.h>
+
+#include "VulkanFwd.h"
 
 using namespace std;
 using namespace video;
 
 namespace vulkan
 {
-    class VulkanContext;
-    class VulkanRenderPass;
-
     class VulkanDisplay: public video::Displayy //todo better error-handling + cross platform
     {
     private:

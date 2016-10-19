@@ -103,6 +103,10 @@ if(Vulkan_FOUND)
         src/vulkan/VulkanRenderPass.cpp
         src/vulkan/VulkanCommands.h
         src/vulkan/VulkanCommands.cpp
+        src/vulkan/VulkanDescriptors.h
+        src/vulkan/VulkanDescriptors.cpp
+        src/vulkan/VulkanMemoryManager.h
+        src/vulkan/VulkanMemoryManager.cpp
     )
     target_link_libraries(OculusTestV
         ${CORE_LIBS}

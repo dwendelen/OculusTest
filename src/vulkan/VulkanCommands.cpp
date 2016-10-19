@@ -3,17 +3,27 @@
 #include "VulkanContext.h"
 #include "VulkanDisplay.h"
 #include "VulkanRenderPass.h"
+#include "VulkanDescriptors.h"
+#include "VulkanMemoryManager.h"
 
 namespace vulkan
 {
-    VulkanCommands::VulkanCommands(VulkanContext& context, VulkanDisplay& display, VulkanRenderPass& renderPass):
+    VulkanCommands::VulkanCommands(
+        VulkanContext& context,
+        VulkanDisplay& display,
+        VulkanRenderPass& renderPass,
+        VulkanDescriptors& descriptors,
+        VulkanMemoryManager& memoryManager)
+        :
         context(context),
         display(display),
-        renderPass(renderPass)
+        renderPass(renderPass),
+        descriptors(descriptors),
+        memoryManager(memoryManager)
     {
 
     }
-    void VulkanCommands::init()
+    void VulkanCommands::init(int nbOfIndices)
     {
         VkCommandBufferAllocateInfo bufferInfo = {};
         bufferInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO;
@@ -57,43 +67,19 @@ namespace vulkan
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
             vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass.getPipeline());
-/*
-            vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass.getLayout(), 0,
 
-    uint32_t                                    descriptorSetCount,
-    const VkDescriptorSet*                      pDescriptorSets,
-    uint32_t                                    0,
-    const uint32_t*                             nullptr);
+            VkDescriptorSet descSet = descriptors.getUniformSet();
 
-*/
-            /*
+            vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
+                renderPass.getLayout(), 0, 0, &descSet, 0, nullptr);
 
-            vkCmdBindVertexBuffers(
-            VkCommandBuffer                             commandBuffer,
-    uint32_t                                    firstBinding,
-    uint32_t                                    bindingCount,
-    const VkBuffer*                             pBuffers,
-    const VkDeviceSize*                         pOffsets
-            )
-            */
-            /*
-            vkCmdBindIndexBuffer(
-            VkCommandBuffer                             commandBuffer,
-    VkBuffer                                    buffer,
-    VkDeviceSize                                offset,
-    VkIndexType                                 VK_INDEX_TYPE_UINT16
-            )
-            */
-            /*
-            vkCmdDrawIndexed(commandBuffers[i],
+            VkBuffer vertexBuffer = memoryManager.getVertexBuffer();
+            VkDeviceSize zeroOffset = 0;
+            vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, &zeroOffset);
+            vkCmdBindIndexBuffer(commandBuffers[i], memoryManager.getIndicesBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-    uint32_t                                    indexCount,
-    uint32_t                                    instanceCount,
-    uint32_t                                    firstIndex,
-    int32_t                                     vertexOffset,
-    uint32_t                                    firstInstance);
-            )
-            */
+            vkCmdDrawIndexed(commandBuffers[i], nbOfIndices, 1, 0, 0, 0);
+
             vkCmdEndRenderPass(commandBuffers[i]);
             r = vkEndCommandBuffer(commandBuffers[i]);
             if(r != VK_SUCCESS) {
