@@ -45,19 +45,30 @@ namespace vulkan
         bufferInfo[1].offset = sizeof(matr);
         bufferInfo[1].range = sizeof(Vector4f);
 
-        VkWriteDescriptorSet write = {};
-        write.sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
-        write.pNext = nullptr;
-        write.dstSet = descriptors.getUniformSet();
-        write.dstBinding = 0;
-        write.dstArrayElement = 0;
-        write.descriptorCount = 2;
-        write.descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
-        write.pImageInfo = nullptr;
-        write.pBufferInfo = bufferInfo;
-        write.pTexelBufferView = nullptr;
+        VkWriteDescriptorSet write[] = {{},{}};
+        write[0].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        write[0].pNext = nullptr;
+        write[0].dstSet = descriptors.getUniformSet();
+        write[0].dstBinding = 0;
+        write[0].dstArrayElement = 0;
+        write[0].descriptorCount = 1;
+        write[0].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        write[0].pImageInfo = nullptr;
+        write[0].pBufferInfo = &bufferInfo[0];
+        write[0].pTexelBufferView = nullptr;
 
-        vkUpdateDescriptorSets(context.getDevice(), 2, &write, 0, nullptr);
+        write[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
+        write[1].pNext = nullptr;
+        write[1].dstSet = descriptors.getUniformSet();
+        write[1].dstBinding = 0;
+        write[1].dstArrayElement = 0;
+        write[1].descriptorCount = 1;
+        write[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
+        write[1].pImageInfo = nullptr;
+        write[1].pBufferInfo = &bufferInfo[1];
+        write[1].pTexelBufferView = nullptr;
+
+        vkUpdateDescriptorSets(context.getDevice(), 2, write, 0, nullptr);
     }
 
     void VulkanMemoryManager::allocateMemory(VkBuffer& buffer, VkDeviceMemory& memory, VkDeviceSize size, VkBufferUsageFlags usage, string objectName)
@@ -86,7 +97,7 @@ namespace vulkan
         memoryInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
         memoryInfo.pNext = nullptr;
         memoryInfo.allocationSize = memRequirements.size;
-        memoryInfo.memoryTypeIndex = context.getMemoryTypeIndex();
+        memoryInfo.memoryTypeIndex = calculateMemoryTypeIndex(memRequirements.memoryTypeBits);
 
         r = vkAllocateMemory(context.getDevice(), &memoryInfo, nullptr, &memory);
         if(r != VK_SUCCESS) {
@@ -99,6 +110,27 @@ namespace vulkan
         }
     }
 
+    uint32_t VulkanMemoryManager::calculateMemoryTypeIndex(uint32_t typeBits)
+    {
+        VkMemoryPropertyFlags requiredFlags = VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT;
+        VkPhysicalDeviceMemoryProperties props;
+        vkGetPhysicalDeviceMemoryProperties(context.getPhysicalDevice(), &props);
+        uint32_t typeBit = 1;
+        for(int i = 0; i < props.memoryTypeCount; i++)
+        {
+            if ((typeBits & typeBit)) {
+                VkMemoryPropertyFlags flags = props.memoryTypes[i].propertyFlags;
+                if((flags & requiredFlags) == requiredFlags) {
+                    return i;
+                }
+            }
+
+            typeBit = typeBit << 1;
+        }
+
+        throw new runtime_error("No appropriate device found");
+    }
+
     template<typename T>
     void upload(VkDevice device, vector<T> src, VkDeviceMemory memory, string objectName)
     {
@@ -109,6 +141,18 @@ namespace vulkan
             throw new runtime_error("Could not upload " + objectName);
         }
         memcpy(dest, src.data(), size);
+
+        VkMappedMemoryRange range = {};
+        range.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        range.pNext = nullptr;
+        range.memory = memory;
+        range.offset = 0;
+        range.size = size;
+        r = vkFlushMappedMemoryRanges(device, 1, &range);
+        if(r != VK_SUCCESS) {
+            throw new runtime_error("Could not upload " + objectName);
+        }
+
         vkUnmapMemory(device, memory);
     }
 
@@ -134,6 +178,18 @@ namespace vulkan
             throw new runtime_error("Could not upload uniform");
         }
         memcpy(dest, &m, size);
+
+        VkMappedMemoryRange range = {};
+        range.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
+        range.pNext = nullptr;
+        range.memory = uniformMemory;
+        range.offset = 0;
+        range.size = size;
+        r = vkFlushMappedMemoryRanges(context.getDevice(), 1, &range);
+        if(r != VK_SUCCESS) {
+            throw new runtime_error("Could not upload uniform");
+        }
+
         vkUnmapMemory(context.getDevice(), uniformMemory);
     }
 

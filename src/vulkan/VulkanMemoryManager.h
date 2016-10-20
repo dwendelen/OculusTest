@@ -26,6 +26,7 @@ namespace vulkan {
             VkDeviceMemory uniformMemory;
 
             void allocateMemory(VkBuffer& buffer, VkDeviceMemory& memory, VkDeviceSize size, VkBufferUsageFlags usage, string objectName);
+            uint32_t calculateMemoryTypeIndex(uint32_t typeBits);
         public:
             VulkanMemoryManager(VulkanContext& context, VulkanDescriptors& descriptors);
             void init();

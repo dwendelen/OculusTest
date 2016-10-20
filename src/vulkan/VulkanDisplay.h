@@ -36,8 +36,8 @@ namespace vulkan
         vector<VkFramebuffer> getFramebuffers() { return framebuffers; }
         VkImageView getDepthView() { return depthView; }
         virtual void prepareForNewFrame() {}
-        virtual int getWidth() {return 0;};
-        virtual int getHeight() { return 0;};
+        virtual int getWidth() { return width; };
+        virtual int getHeight() { return height; };
         virtual ~VulkanDisplay();
     };
 }

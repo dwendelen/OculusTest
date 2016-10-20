@@ -108,13 +108,14 @@ namespace vulkan
             }
             views.push_back(view);
 
-            VkImageView attachments[] = {view, /*depthView*/ view};
+            VkImageView attachments[] = {view, /*depthView*/};
 
             VkFramebufferCreateInfo framebufferInfo = {};
             framebufferInfo.sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO;
             framebufferInfo.renderPass = renderPass.getRenderPass();
-            framebufferInfo.attachmentCount = 2;
-            framebufferInfo.pAttachments = &view;
+            framebufferInfo.attachmentCount = 1;
+            //framebufferInfo.attachmentCount = 2;
+            framebufferInfo.pAttachments = attachments;
             framebufferInfo.width = width;
             framebufferInfo.height = height;
             framebufferInfo.layers = 1;

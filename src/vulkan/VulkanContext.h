@@ -14,14 +14,14 @@ namespace vulkan
             VkInstance instance;
             unique_ptr<VulkanDebug> debug;
             VkDevice device;
+            VkPhysicalDevice physicalDevice;
             VkQueue queue;
             uint32_t queueFamilyIndex;
-            uint32_t memoryTypeIndex;
             VkCommandPool commandPool;
 
             void createInstance();
             void createDevice();
-            VkPhysicalDevice getPhysicalDevice();
+            VkPhysicalDevice getPhysicalDeviceFromVulkan();
             uint32_t getQueueFamilyIndex(VkPhysicalDevice physicalDevice);
             uint32_t calculateMemoryTypeIndex(VkPhysicalDevice physicalDevice);
         public:
@@ -29,8 +29,8 @@ namespace vulkan
             void init();
             VkInstance getInstance() { return instance; }
             VkDevice getDevice() { return device; }
+            VkPhysicalDevice getPhysicalDevice() { return physicalDevice; }
             VkCommandPool getCommandPool() { return commandPool; }
-            uint32_t getMemoryTypeIndex() { return memoryTypeIndex; }
             ~VulkanContext();
     };
 }

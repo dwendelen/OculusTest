@@ -282,11 +282,11 @@ namespace vulkan
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colorRef;
         subpass.pResolveAttachments = nullptr;
-        subpass.pDepthStencilAttachment = &depthRef;
+        subpass.pDepthStencilAttachment = nullptr;//&depthRef;
         subpass.preserveAttachmentCount = 0;
         subpass.pResolveAttachments = nullptr;
 
-        vector<VkAttachmentDescription> attachements = {colorAttachment, depthAttachment};
+        vector<VkAttachmentDescription> attachements = {colorAttachment/*, depthAttachment*/};
         vector<VkSubpassDescription> subPasses = {subpass};
         vector<VkSubpassDependency> subPassDependencies;
 

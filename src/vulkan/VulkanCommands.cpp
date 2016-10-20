@@ -38,46 +38,49 @@ namespace vulkan
             throw new runtime_error("Could not create command buffers");
         }
 
+        vector<VkFramebuffer> framebuffers = display.getFramebuffers();
         for(int i = 0; i < display.getFramebuffers().size(); i++) {
             VkCommandBufferBeginInfo beginInfo = {};
             beginInfo.sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO;
             beginInfo.flags = VK_COMMAND_BUFFER_USAGE_SIMULTANEOUS_USE_BIT;
-            beginInfo.pInheritanceInfo = nullptr; // Optional
+            beginInfo.pInheritanceInfo = nullptr;
 
             r = vkBeginCommandBuffer(commandBuffers[i], &beginInfo);
             if(r != VK_SUCCESS) {
                 throw new runtime_error("Could not begin recording command");
             }
 
-            VkClearValue clearValue[0];
+            VkClearValue clearValue[1];
             clearValue[0].color = {0.0f, 0.0f, 0.0f, 1.0f};
-            clearValue[1].depthStencil = {1.0f, 0};
+            //clearValue[1].depthStencil = {1.0f, 0};
 
             VkRenderPassBeginInfo renderPassInfo = {};
             renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
             renderPassInfo.pNext = nullptr;
             renderPassInfo.renderPass = renderPass.getRenderPass();
-            renderPassInfo.framebuffer = display.getFramebuffers()[i];
+            renderPassInfo.framebuffer = framebuffers[i];
             renderPassInfo.renderArea.extent.height = display.getHeight();
             renderPassInfo.renderArea.extent.width = display.getWidth();
             renderPassInfo.renderArea.offset.x = 0;
             renderPassInfo.renderArea.offset.y = 0;
-            renderPassInfo.clearValueCount = 2;
+            renderPassInfo.clearValueCount = 1;
+            //renderPassInfo.clearValueCount = 2;
             renderPassInfo.pClearValues = clearValue;
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
             vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, renderPass.getPipeline());
-
-            VkDescriptorSet descSet = descriptors.getUniformSet();
-
-            vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
-                renderPass.getLayout(), 0, 0, &descSet, 0, nullptr);
 
             VkBuffer vertexBuffer = memoryManager.getVertexBuffer();
             VkDeviceSize zeroOffset = 0;
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, &zeroOffset);
             vkCmdBindIndexBuffer(commandBuffers[i], memoryManager.getIndicesBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
+/*
+            VkDescriptorSet descSet = descriptors.getUniformSet();
+
+            vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
+                renderPass.getLayout(), 0, 1, &descSet, 0, nullptr);
+*/
             vkCmdDrawIndexed(commandBuffers[i], nbOfIndices, 1, 0, 0, 0);
 
             vkCmdEndRenderPass(commandBuffers[i]);

@@ -9,6 +9,7 @@ namespace vulkan
 {
     VulkanContext::VulkanContext():
         instance(VK_NULL_HANDLE),
+        physicalDevice(VK_NULL_HANDLE),
         device(VK_NULL_HANDLE),
         queue(VK_NULL_HANDLE),
         commandPool(VK_NULL_HANDLE) {}
@@ -89,9 +90,8 @@ namespace vulkan
             VK_KHR_SWAPCHAIN_EXTENSION_NAME
         };
 
-        VkPhysicalDevice physicalDevice = getPhysicalDevice();
+        physicalDevice = getPhysicalDeviceFromVulkan();
         queueFamilyIndex = getQueueFamilyIndex(physicalDevice);
-        memoryTypeIndex = calculateMemoryTypeIndex(physicalDevice);
 
         float prio[] = {1.0f};
         VkDeviceQueueCreateInfo queueCreateInfo;
@@ -118,7 +118,7 @@ namespace vulkan
             throw new runtime_error("Could not create a device");
         }
     }
-    VkPhysicalDevice VulkanContext::getPhysicalDevice()
+    VkPhysicalDevice VulkanContext::getPhysicalDeviceFromVulkan()
     {
         vector<VkPhysicalDevice> devices = getVector(vkEnumeratePhysicalDevices, instance,
             "Could not enumerate over the physical devices");
@@ -128,6 +128,7 @@ namespace vulkan
             VkPhysicalDeviceProperties props;
             vkGetPhysicalDeviceProperties(device, &props);
             if(props.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU) {
+                //props.limits.
                 return device;
             }
         }
@@ -147,15 +148,6 @@ namespace vulkan
         }
 
         throw new runtime_error("No graphics queue found");
-    }
-
-    uint32_t VulkanContext::calculateMemoryTypeIndex(VkPhysicalDevice device)
-    {
-        VkPhysicalDeviceMemoryProperties props;
-        vkGetPhysicalDeviceMemoryProperties(device, &props);
-
-
-        throw new runtime_error("No appropriate device found");
     }
 
     VulkanContext::~VulkanContext()
