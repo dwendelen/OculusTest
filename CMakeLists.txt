@@ -38,6 +38,9 @@ set(CORE_SRC
     include/Camera.h
     include/Display.h
     include/RenderingTarget.h
+    include/Renderer.h
+    include/NormalRenderer.h
+    src/NormalRenderer.cpp
 )
 set(CORE_LIBS
     ${OPENGL_LIBRARIES}

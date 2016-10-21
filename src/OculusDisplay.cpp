@@ -9,7 +9,7 @@
 
 namespace oculus
 {
-	OculusDisplay::OculusDisplay(Oculus& oculus, Display* mirrorDisplay) :
+	OculusDisplay::OculusDisplay(Oculus& oculus, Displayy* mirrorDisplay) :
 		oculus(oculus), mirrorDisplay(mirrorDisplay)
 	{
 		this->session = oculus.getSession();

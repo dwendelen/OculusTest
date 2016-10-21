@@ -6,7 +6,12 @@
 #include "NormalDisplay.h"
 
 #include "Engine.h"
+#include "MemoryManager.h"
+#include "LegoBrick.h"
+#include "NormalRenderer.h"
 
+using namespace std;
+using namespace memory;
 using namespace OVR;
 using namespace oculus;
 using namespace video;
@@ -26,7 +31,16 @@ int main(int argc, char* argv[]) {
 
     std::unique_ptr<Camera> camera (new OculusCamera(oculus, display->getRenderingTargets()));;
 
-    Engine engine(*display, *camera, oculus);
+	std::unique_ptr<LegoBrick> brick(new LegoBrick());
+	brick->init();
+	std::unique_ptr<MemoryManager> memory(new MemoryManager());
+	memory->init();
+	memory->load(*brick);
+
+	std::unique_ptr<NormalRenderer> renderer(new NormalRenderer(*memory, *brick));
+	renderer->init();
+
+    Engine engine(*display, *camera, oculus, *renderer, *brick);
     engine.run();
 	return 0;
 }

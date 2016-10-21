@@ -20,7 +20,7 @@ namespace oculus {
 	class Oculus;
 	class OculusRenderingTarget;
 
-	class OculusDisplay : public Display
+	class OculusDisplay : public Displayy
 	{
 		ovrSession session;
 		ovrMirrorTexture mirrorTexture;
@@ -29,10 +29,10 @@ namespace oculus {
 		GLuint mirrorFrameBuffer;
 		ovrLayerEyeFov layer;
 		Oculus& oculus;
-		Display* mirrorDisplay;
+		Displayy* mirrorDisplay;
 		std::vector<OculusRenderingTarget> renderingTargets;
 	public:
-		OculusDisplay(Oculus& oculus, Display* mirrorDisplay);
+		OculusDisplay(Oculus& oculus, Displayy* mirrorDisplay);
 		void init();
 		void swap();
 		std::vector<std::reference_wrapper<RenderingTarget>> getRenderingTargets();

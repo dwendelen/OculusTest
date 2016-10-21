@@ -3,8 +3,10 @@
 #include "VulkanContext.h"
 #include "VulkanRenderPass.h"
 
-#include "SDL2/SDL_syswm.h"
-#include <X11/Xlib-xcb.h>
+#include "SDL_syswm.h"
+#ifdef __LINUX__
+	#include <X11/Xlib-xcb.h>
+#endif
 #include <stdexcept>
 #include <string>
 
@@ -40,22 +42,45 @@ namespace vulkan
         SDL_SysWMinfo windowInfo;
         SDL_VERSION(&windowInfo.version);
         SDL_GetWindowWMInfo(window, &windowInfo);
-        if(windowInfo.subsystem != SDL_SYSWM_X11) {
-            throw new runtime_error("Not Xlib");
-        }
+		#ifdef __LINUX__
+			if(windowInfo.subsystem != SDL_SYSWM_X11) {
+				throw new runtime_error("Not Xlib");
+			}
 
-        PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR  = reinterpret_cast<PFN_vkCreateXcbSurfaceKHR>
-                (vkGetInstanceProcAddr(vulkanContext.getInstance(), "vkCreateXcbSurfaceKHR"));
+			PFN_vkCreateXcbSurfaceKHR vkCreateXcbSurfaceKHR  = reinterpret_cast<PFN_vkCreateXcbSurfaceKHR>
+					(vkGetInstanceProcAddr(vulkanContext.getInstance(), "vkCreateXcbSurfaceKHR"));
 
-        VkXcbSurfaceCreateInfoKHR surfaceCreateInfo = {};
-        surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
-        surfaceCreateInfo.pNext = nullptr;
-        surfaceCreateInfo.flags = 0;
-        surfaceCreateInfo.connection = XGetXCBConnection(windowInfo.info.x11.display);
-        surfaceCreateInfo.window = windowInfo.info.x11.window;
+			VkXcbSurfaceCreateInfoKHR surfaceCreateInfo = {};
+			surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_XCB_SURFACE_CREATE_INFO_KHR;
+			surfaceCreateInfo.pNext = nullptr;
+			surfaceCreateInfo.flags = 0;
+			surfaceCreateInfo.connection = XGetXCBConnection(windowInfo.info.x11.display);
+			surfaceCreateInfo.window = windowInfo.info.x11.window;
 
-        vkCreateXcbSurfaceKHR(vulkanContext.getInstance(), &surfaceCreateInfo, nullptr, &surface);
+			vkCreateXcbSurfaceKHR(vulkanContext.getInstance(), &surfaceCreateInfo, nullptr, &surface);
+		#endif
+		#ifdef __WINDOWS__
+			if(windowInfo.subsystem != SDL_SYSWM_WINDOWS) {
+				throw new runtime_error("Not Windows");
+			}
 
+			PFN_vkCreateWin32SurfaceKHR vkCreateWin32SurfaceKHR = reinterpret_cast<PFN_vkCreateWin32SurfaceKHR>
+				(vkGetInstanceProcAddr(vulkanContext.getInstance(), "vkCreateWin32SurfaceKHR"));
+
+			/*TCHAR* className;
+			GetClassName(windowInfo.info.win.window, className, 256);
+			WNDCLASS wce;
+			GetClassInfo(GetModuleHandle(NULL), className, &wce);
+			GetModuleH*/
+			VkWin32SurfaceCreateInfoKHR surfaceCreateInfo = {};
+			surfaceCreateInfo.sType = VK_STRUCTURE_TYPE_WIN32_SURFACE_CREATE_INFO_KHR;
+			surfaceCreateInfo.pNext = nullptr;
+			surfaceCreateInfo.flags = 0;
+			surfaceCreateInfo.hwnd = windowInfo.info.win.window;
+			surfaceCreateInfo.hinstance = GetModuleHandle(NULL);
+
+			vkCreateWin32SurfaceKHR(vulkanContext.getInstance(), &surfaceCreateInfo, nullptr, &surface);
+		#endif
         //TODO CHECK CAPABILITIES
         VkSwapchainCreateInfoKHR swapCreateInfo = {};
         swapCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;

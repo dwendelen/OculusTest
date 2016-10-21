@@ -4,8 +4,8 @@
 #include <memory>
 #include <vector>
 
-class LegoBrick;
 class ModelInstance;
+class Model;
 
 namespace memory {
     class MemoryManager;
@@ -15,28 +15,29 @@ using namespace OVR;
 using namespace std;
 using namespace memory;
 
+#include "ModelInstance.h"
+
 class Scene
 {
-	GLuint program;
-	unique_ptr<LegoBrick> legoBrick;
+	Model& legoBrick;
 	unique_ptr<ModelInstance> model;
-    vector<ModelInstance> placedBlocks;
+	vector<ModelInstance> placedBlocks;
 
 	Quatf orientation;
-	MemoryManager& memoryManager;
 	int colorIndex;
 
 public:
-	Scene(MemoryManager& memoryManager);
+	Scene(Model& model);
 	void init();
 	void rotate(Quatf rotation);
 	void move(Vector3f translation);
 	void moveTo(Vector3f position);
 	void place();
 	void changeColor();
-	void render(Matrix4f pv);
 	void enableWireframe();
 	void disableWireframe();
+	vector<ModelInstance> getPlacedBlocks() { return placedBlocks; };
+	ModelInstance* getCurrentBlock() { return model.get(); };
 	~Scene();
 };
 

@@ -24,6 +24,7 @@ namespace vulkan {
             VkDeviceMemory indicesMemory;
             VkBuffer uniformBuffer;
             VkDeviceMemory uniformMemory;
+			int colorUniformOffset;
 
             void allocateMemory(VkBuffer& buffer, VkDeviceMemory& memory, VkDeviceSize size, VkBufferUsageFlags usage, string objectName);
             uint32_t calculateMemoryTypeIndex(uint32_t typeBits);

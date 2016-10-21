@@ -75,12 +75,12 @@ namespace vulkan
             vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, &vertexBuffer, &zeroOffset);
             vkCmdBindIndexBuffer(commandBuffers[i], memoryManager.getIndicesBuffer(), 0, VK_INDEX_TYPE_UINT32);
 
-/*
+
             VkDescriptorSet descSet = descriptors.getUniformSet();
 
             vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
                 renderPass.getLayout(), 0, 1, &descSet, 0, nullptr);
-*/
+
             vkCmdDrawIndexed(commandBuffers[i], nbOfIndices, 1, 0, 0, 0);
 
             vkCmdEndRenderPass(commandBuffers[i]);

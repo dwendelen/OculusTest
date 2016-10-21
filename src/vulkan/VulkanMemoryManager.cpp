@@ -5,6 +5,7 @@
 
 #include <vector>
 #include "Model.h"
+#include <memory>
 
 namespace vulkan
 {
@@ -16,7 +17,8 @@ namespace vulkan
         indicesBuffer(VK_NULL_HANDLE),
         indicesMemory(VK_NULL_HANDLE),
         uniformBuffer(VK_NULL_HANDLE),
-        uniformMemory(VK_NULL_HANDLE)
+        uniformMemory(VK_NULL_HANDLE),
+		colorUniformOffset(0)
     {
         //ctor
     }
@@ -28,7 +30,7 @@ namespace vulkan
 
 
     void VulkanMemoryManager::init()
-    {
+    {		
         allocateMemory(vertexBuffer, vertexMemory,
             4 * 1024 * 1024, VK_BUFFER_USAGE_VERTEX_BUFFER_BIT, "vertex");
         allocateMemory(indicesBuffer, indicesMemory,
@@ -36,13 +38,18 @@ namespace vulkan
         allocateMemory(uniformBuffer, uniformMemory,
             1 * 1024 * 1024, VK_BUFFER_USAGE_UNIFORM_BUFFER_BIT, "uniform");
 
+		VkPhysicalDeviceProperties props;
+		vkGetPhysicalDeviceProperties(context.getPhysicalDevice(), &props);
+		int align = props.limits.minUniformBufferOffsetAlignment;
+		colorUniformOffset = ((sizeof(matr) + align - 1) / align) * align;
+			
         VkDescriptorBufferInfo bufferInfo[] = {{}, {}};
         bufferInfo[0].buffer = uniformBuffer;
         bufferInfo[0].offset = 0;
         bufferInfo[0].range = sizeof(matr);
 
         bufferInfo[1].buffer = uniformBuffer;
-        bufferInfo[1].offset = sizeof(matr);
+		bufferInfo[1].offset = colorUniformOffset;
         bufferInfo[1].range = sizeof(Vector4f);
 
         VkWriteDescriptorSet write[] = {{},{}};
@@ -60,7 +67,7 @@ namespace vulkan
         write[1].sType = VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET;
         write[1].pNext = nullptr;
         write[1].dstSet = descriptors.getUniformSet();
-        write[1].dstBinding = 0;
+        write[1].dstBinding = 1;
         write[1].dstArrayElement = 0;
         write[1].descriptorCount = 1;
         write[1].descriptorType = VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER;
@@ -164,21 +171,16 @@ namespace vulkan
 
     void VulkanMemoryManager::setUniform(Matrix4f mvp, Matrix4f rot, Vector4f color)
     {
-        struct matrCol {
-            struct matr m;
-            Vector4f col;
-        };
-
-        struct matrCol m = {mvp, rot, color};
+        struct matr m = {mvp, rot};
 
         void* dest;
-        int size = sizeof(matrCol);
+        int size = colorUniformOffset + sizeof(color);
         VkResult r = vkMapMemory(context.getDevice(), uniformMemory, 0, size, 0, &dest);
         if(r != VK_SUCCESS) {
             throw new runtime_error("Could not upload uniform");
         }
-        memcpy(dest, &m, size);
-
+        memcpy(dest, &m, sizeof(m));
+		memcpy(static_cast<byte*>(dest) + colorUniformOffset, &color, sizeof(color));
         VkMappedMemoryRange range = {};
         range.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         range.pNext = nullptr;

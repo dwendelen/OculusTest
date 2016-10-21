@@ -3,6 +3,8 @@
 #include "VulkanContext.h"
 #include "VulkanRenderPass.h"
 
+#include <stdexcept>
+
 namespace vulkan {
     VulkanDescriptors::VulkanDescriptors(VulkanContext& context, VulkanRenderPass& renderPass):
         context(context),

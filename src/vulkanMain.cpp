@@ -1,4 +1,4 @@
-#define VK_USE_PLATFORM_XCB_KHR 1
+#include "VulkanFwd.h"
 
 #include "VulkanContext.h"
 #include "VulkanDisplay.h"
@@ -34,4 +34,6 @@ int main(int argc, char* argv[])
 
     VulkanCommands commands(vulkanContext, vulkanDisplay, renderPass, vulkanDescriptors, vulkanMemoryManager);
     commands.init(LegoBrick.getIndices().size());
+
+	return 0;
 }

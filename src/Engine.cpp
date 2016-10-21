@@ -6,19 +6,19 @@
 #include "Display.h"
 #include "Camera.h"
 #include "RenderingTarget.h"
+#include "Renderer.h"
 
-Engine::Engine(Displayy& display, Camera& camera, VR& vr):
+Engine::Engine(Displayy& display, Camera& camera, VR& vr, Renderer& renderer, Model& model):
     display(display),
     camera(camera),
-    vr(vr)
+    vr(vr),
+	renderer(renderer),
+	model(model)
 {
 }
 
 void Engine::run() {
-    MemoryManager loader;
-    loader.init();
-
-	Scene scene(loader);
+	Scene scene(model);
 	scene.init();
 
 	inputManager.reset(new InputManager(scene, vr));
@@ -34,7 +34,7 @@ void Engine::run() {
 			Matrix4f pv = camera.calculatePV(perspective);
 			RenderingTarget& renderingTarget = camera.getRenderingTarget(perspective);
 			renderingTarget.prepareForRendering();
-			scene.render(pv);
+			renderer.renderScene(scene, pv);
 			renderingTarget.renderingDone();
 		}
 		display.swap();

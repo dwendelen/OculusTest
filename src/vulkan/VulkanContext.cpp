@@ -47,7 +47,12 @@ namespace vulkan
             "VK_LAYER_GOOGLE_unique_objects"
         };
         vector<const char*> extensions = {
+#ifdef __LINUX__
             VK_KHR_XCB_SURFACE_EXTENSION_NAME,
+#endif
+#ifdef __WINDOWS__
+			VK_KHR_WIN32_SURFACE_EXTENSION_NAME,
+#endif
             "VK_KHR_surface",
             "VK_EXT_debug_report"
         };
