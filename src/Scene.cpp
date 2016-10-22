@@ -23,7 +23,7 @@ const vector<Vector3f> colors = {
 
 void Scene::init() {
 	orientation = Quatf(0.0f, 0.0f, 0.0f, 1.0f);
-	model.reset(new ModelInstance(legoBrick, Vector3f(0.0f, 0.0f, -0.2f), orientation));
+	model.reset(new ModelInstance(legoBrick, Vector3f(0.0f, 0.0f, 0.2f/*-0.2f/*0.0f*/), orientation));
     model->setColor(colors[0]);
 }
 

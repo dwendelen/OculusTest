@@ -120,7 +120,7 @@ namespace vulkan
         viewport.height = height;
         viewport.width = width;
         viewport.minDepth = 0.0f;
-        viewport.maxDepth = 0.0f;
+        viewport.maxDepth = 1.0f;
 
         VkRect2D scissor = {};
         scissor.offset.x = 0;
@@ -143,14 +143,15 @@ namespace vulkan
         rasteriserInfo.pNext = nullptr;
         rasteriserInfo.flags = 0;
         rasteriserInfo.depthClampEnable = VK_FALSE;
-        rasteriserInfo.rasterizerDiscardEnable = VK_TRUE;
+        rasteriserInfo.rasterizerDiscardEnable = VK_FALSE;
         rasteriserInfo.polygonMode = VK_POLYGON_MODE_FILL;
-        rasteriserInfo.cullMode = VK_CULL_MODE_BACK_BIT;
+		rasteriserInfo.cullMode = VK_CULL_MODE_NONE;// VK_CULL_MODE_BACK_BIT;
         rasteriserInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasteriserInfo.depthBiasEnable = VK_FALSE;
         rasteriserInfo.depthBiasConstantFactor = 0.0f;
         rasteriserInfo.depthBiasClamp = 0.0f;
         rasteriserInfo.depthBiasSlopeFactor = 0.0f;
+		rasteriserInfo.lineWidth = 1.0f;
 
         //MULTISAMPLE
         VkPipelineMultisampleStateCreateInfo multisamplingInfo = {};
@@ -167,8 +168,8 @@ namespace vulkan
         depthInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_DEPTH_STENCIL_STATE_CREATE_INFO;
         depthInfo.pNext = nullptr;
         depthInfo.flags = 0;
-        depthInfo.depthTestEnable = VK_TRUE;
-        depthInfo.depthWriteEnable = VK_TRUE;
+		depthInfo.depthTestEnable = VK_TRUE;
+		depthInfo.depthWriteEnable = VK_TRUE;
         depthInfo.depthCompareOp = VK_COMPARE_OP_LESS_OR_EQUAL;
         depthInfo.depthBoundsTestEnable = VK_FALSE;
         depthInfo.minDepthBounds = 0.0f;
@@ -179,7 +180,8 @@ namespace vulkan
 
         //COLOR
         VkPipelineColorBlendAttachmentState attachmentState = {};
-        attachmentState.blendEnable = VK_TRUE;
+		attachmentState.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
+        attachmentState.blendEnable = /*VK_TRUE*/VK_FALSE;
         attachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
         attachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         attachmentState.colorBlendOp = VK_BLEND_OP_ADD;
@@ -246,7 +248,7 @@ namespace vulkan
         //RENDER PASSES
         VkAttachmentDescription colorAttachment = {};
         colorAttachment.flags = 0;
-        colorAttachment.format = VK_FORMAT_B8G8R8A8_UNORM; //TODO derive from swapchain
+        colorAttachment.format = VK_FORMAT_R8G8B8A8_SRGB; //TODO derive from swapchain
         colorAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
@@ -282,13 +284,22 @@ namespace vulkan
         subpass.colorAttachmentCount = 1;
         subpass.pColorAttachments = &colorRef;
         subpass.pResolveAttachments = nullptr;
-        subpass.pDepthStencilAttachment = nullptr;//&depthRef;
+        subpass.pDepthStencilAttachment = &depthRef;
         subpass.preserveAttachmentCount = 0;
         subpass.pResolveAttachments = nullptr;
 
-        vector<VkAttachmentDescription> attachements = {colorAttachment/*, depthAttachment*/};
+        vector<VkAttachmentDescription> attachements = {colorAttachment, depthAttachment};
         vector<VkSubpassDescription> subPasses = {subpass};
         vector<VkSubpassDependency> subPassDependencies;
+
+		VkSubpassDependency dependency = {};
+		dependency.srcSubpass = VK_SUBPASS_EXTERNAL;
+		dependency.dstSubpass = 0;
+		dependency.srcStageMask = VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+		dependency.srcAccessMask = VK_ACCESS_MEMORY_READ_BIT;
+		dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+		dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
+		subPassDependencies.push_back(dependency);
 
         VkRenderPassCreateInfo renderPassInfo = {};
         renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
@@ -318,14 +329,14 @@ namespace vulkan
         pipelineInfo.pViewportState = &viewportInfo;
         pipelineInfo.pRasterizationState = &rasteriserInfo;
         pipelineInfo.pMultisampleState = &multisamplingInfo;
-        pipelineInfo.pDepthStencilState = &depthInfo;
+		pipelineInfo.pDepthStencilState = &depthInfo;
         pipelineInfo.pColorBlendState = &colorInfo;
         pipelineInfo.pDynamicState = nullptr;
         pipelineInfo.layout = layout;
         pipelineInfo.renderPass = renderPass;
         pipelineInfo.subpass = 0;
-        pipelineInfo.basePipelineHandle = 0;
-        pipelineInfo.basePipelineIndex = 0;
+        pipelineInfo.basePipelineHandle = VK_NULL_HANDLE;
+        pipelineInfo.basePipelineIndex = -1;
 
         r = vkCreateGraphicsPipelines(vulkanContext.getDevice(), VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &pipeline);
         if(r != VK_SUCCESS) {

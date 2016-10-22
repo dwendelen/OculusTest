@@ -50,9 +50,9 @@ namespace vulkan
                 throw new runtime_error("Could not begin recording command");
             }
 
-            VkClearValue clearValue[1];
-            clearValue[0].color = {0.0f, 0.0f, 0.0f, 1.0f};
-            //clearValue[1].depthStencil = {1.0f, 0};
+            VkClearValue clearValue[2];
+            clearValue[0].color = {0.0f, 0.0f, 0.4f, 1.0f};
+            clearValue[1].depthStencil = {1.0f, 0};
 
             VkRenderPassBeginInfo renderPassInfo = {};
             renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -63,8 +63,7 @@ namespace vulkan
             renderPassInfo.renderArea.extent.width = display.getWidth();
             renderPassInfo.renderArea.offset.x = 0;
             renderPassInfo.renderArea.offset.y = 0;
-            renderPassInfo.clearValueCount = 1;
-            //renderPassInfo.clearValueCount = 2;
+            renderPassInfo.clearValueCount = 2;
             renderPassInfo.pClearValues = clearValue;
 
             vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
@@ -80,6 +79,14 @@ namespace vulkan
 
             vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS,
                 renderPass.getLayout(), 0, 1, &descSet, 0, nullptr);
+
+			VkViewport viewport = {};
+			viewport.x = 0;
+			viewport.y = 0;
+			viewport.height = display.getHeight();
+			viewport.width = display.getWidth();
+			viewport.minDepth = 0.0f;
+			viewport.maxDepth = 0.0f;
 
             vkCmdDrawIndexed(commandBuffers[i], nbOfIndices, 1, 0, 0, 0);
 

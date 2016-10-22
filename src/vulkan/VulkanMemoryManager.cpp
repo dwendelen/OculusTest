@@ -171,7 +171,7 @@ namespace vulkan
 
     void VulkanMemoryManager::setUniform(Matrix4f mvp, Matrix4f rot, Vector4f color)
     {
-        struct matr m = {mvp, rot};
+        struct matr m = {mvp.Transposed(), rot.Transposed()};
 
         void* dest;
         int size = colorUniformOffset + sizeof(color);

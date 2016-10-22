@@ -18,4 +18,5 @@ namespace vulkan
     class VulkanRenderPass;
     class VulkanDisplay;
     class VulkanMemoryManager;
+	class VulkanRenderer;
 }

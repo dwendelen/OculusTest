@@ -1,6 +1,9 @@
 #include "InputManager.h"
 #include "Extras/OVR_Math.h"
 
+#include <iostream>
+
+using namespace std;
 using namespace OVR;
 
 namespace input {
@@ -42,7 +45,11 @@ namespace input {
             Uint32 elapsedMilis = ticks - lastTicks;
             lastTicks = ticks;
             SDL_Event windowEvent;
-
+			if (elapsedMilis != 0) {
+				int fps = 1000 / elapsedMilis;
+				//cout << "FPS " << fps << endl; 
+			}
+			
             while (SDL_PollEvent(&windowEvent))
             {
                 switch (windowEvent.type) {
@@ -54,6 +61,24 @@ namespace input {
                             case SDL_SCANCODE_ESCAPE:
                                 quit();
                                 return;
+							case SDL_SCANCODE_SPACE:
+								scene.place();
+								break;
+							case SDL_SCANCODE_A:
+								scene.move(Vector3f(-0.032f, 0, 0));
+								break;
+							case SDL_SCANCODE_D:
+								scene.move(Vector3f(0.032f, 0, 0));
+								break;
+							case SDL_SCANCODE_W:
+								scene.move(Vector3f(0, 0, -0.016f));
+								break;
+							case SDL_SCANCODE_S:
+								scene.move(Vector3f(0, 0, 0.016f));
+								break;
+							case SDL_SCANCODE_TAB:
+								scene.changeColor();
+								break;
                         }
                         break;
                     case SDL_CONTROLLERDEVICEADDED:

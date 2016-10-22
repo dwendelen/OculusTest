@@ -31,6 +31,7 @@ namespace vulkan
             VkDevice getDevice() { return device; }
             VkPhysicalDevice getPhysicalDevice() { return physicalDevice; }
             VkCommandPool getCommandPool() { return commandPool; }
+			VkQueue getQueue() { return queue; }
             ~VulkanContext();
     };
 }
