@@ -2,6 +2,7 @@
 
 #include "VulkanContext.h"
 #include "VulkanRenderPass.h"
+#include "VulkanMemoryManager.h"
 
 #include "SDL_syswm.h"
 #ifdef __LINUX__
@@ -16,33 +17,19 @@ using namespace std;
 
 namespace vulkan
 {
-    VulkanDisplay::VulkanDisplay(VulkanContext& vulkanContext, VulkanRenderPass& renderPass, int width, int height):
+    VulkanDisplay::VulkanDisplay(VulkanContext& vulkanContext, VulkanRenderPass& renderPass, VulkanMemoryManager& memoryManage, int width, int height):
         vulkanContext(vulkanContext),
         renderPass(renderPass),
+		memoryManager(memoryManage),
         surface(VK_NULL_HANDLE),
         swapChain(VK_NULL_HANDLE),
         window(nullptr),
         height(height),
-        width(width),
-        depthImage(VK_NULL_HANDLE),
-        depthMemory(VK_NULL_HANDLE),
-        depthView(VK_NULL_HANDLE),
-		imageReady(VK_NULL_HANDLE),
-		renderingDone(VK_NULL_HANDLE)
+        width(width)
     {}
 
     void VulkanDisplay::init() {
 		VkResult r;
-		VkSemaphoreCreateInfo semaInfo = { VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO, 0, 0 };
-		r = vkCreateSemaphore(vulkanContext.getDevice(), &semaInfo, nullptr, &imageReady);
-		if (r != VK_SUCCESS) {
-			throw new runtime_error("Could not create image ready semaphore");
-		}
-		r = vkCreateSemaphore(vulkanContext.getDevice(), &semaInfo, nullptr, &renderingDone);
-		if (r != VK_SUCCESS) {
-			throw new runtime_error("Could not create image ready semaphore");
-		}
-
         if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) < 0) {
             throw new runtime_error("Could not init SDL: " + string(SDL_GetError()));
         }
@@ -127,7 +114,8 @@ namespace vulkan
             throw new runtime_error("Could not create swapchain");
         }
 
-        cout << "Create depth stuff" << endl;
+		memoryManager.createDepthBuffer(800, 600);
+		VkImageView depthView = memoryManager.getDepthView();
 
         vector<VkImage> images = getVector(vkGetSwapchainImagesKHR, vulkanContext.getDevice(), swapChain, "Could not get swapChain images");
         for(VkImage image: images) {
@@ -155,6 +143,7 @@ namespace vulkan
             }
             views.push_back(view);
 
+			
             VkImageView attachments[] = {view, depthView};
 
             VkFramebufferCreateInfo framebufferInfo = {};

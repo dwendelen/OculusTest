@@ -17,7 +17,12 @@ namespace vulkan
 		VulkanCommands& commands;
 		VulkanDisplay& display;
 
-		void submit(const ModelInstance& renderedModel, const Matrix4f& pv, float alpha);
+		VkSemaphore firstObject;
+		VkSemaphore betweenObjects;
+		VkSemaphore afterObjects;
+
+		VkSemaphore createSemaphore();
+		void submit(const ModelInstance& renderedModel, const Matrix4f& pv, float alpha, VkSemaphore wait, VkSemaphore signal);
 	public:
 		VulkanRenderer(VulkanContext& context, VulkanMemoryManager& memoryManager, VulkanCommands& commands, VulkanDisplay& display);
 		void init();

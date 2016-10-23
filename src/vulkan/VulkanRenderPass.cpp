@@ -145,7 +145,7 @@ namespace vulkan
         rasteriserInfo.depthClampEnable = VK_FALSE;
         rasteriserInfo.rasterizerDiscardEnable = VK_FALSE;
         rasteriserInfo.polygonMode = VK_POLYGON_MODE_FILL;
-		rasteriserInfo.cullMode = VK_CULL_MODE_NONE;// VK_CULL_MODE_BACK_BIT;
+		rasteriserInfo.cullMode = VK_CULL_MODE_BACK_BIT;
         rasteriserInfo.frontFace = VK_FRONT_FACE_COUNTER_CLOCKWISE;
         rasteriserInfo.depthBiasEnable = VK_FALSE;
         rasteriserInfo.depthBiasConstantFactor = 0.0f;
@@ -181,7 +181,7 @@ namespace vulkan
         //COLOR
         VkPipelineColorBlendAttachmentState attachmentState = {};
 		attachmentState.colorWriteMask = VK_COLOR_COMPONENT_R_BIT | VK_COLOR_COMPONENT_G_BIT | VK_COLOR_COMPONENT_B_BIT | VK_COLOR_COMPONENT_A_BIT;
-        attachmentState.blendEnable = /*VK_TRUE*/VK_FALSE;
+        attachmentState.blendEnable = VK_TRUE;
         attachmentState.srcColorBlendFactor = VK_BLEND_FACTOR_SRC_ALPHA;
         attachmentState.dstColorBlendFactor = VK_BLEND_FACTOR_ONE_MINUS_SRC_ALPHA;
         attachmentState.colorBlendOp = VK_BLEND_OP_ADD;
@@ -263,7 +263,7 @@ namespace vulkan
 
         VkAttachmentDescription depthAttachment = {};
         depthAttachment.flags = 0;
-        depthAttachment.format = VK_FORMAT_D24_UNORM_S8_UINT; //TODO derive from swapchain
+		depthAttachment.format = VK_FORMAT_D32_SFLOAT; //TODO derive from swapchain
         depthAttachment.samples = VK_SAMPLE_COUNT_1_BIT;
         depthAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
         depthAttachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;

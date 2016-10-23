@@ -97,5 +97,7 @@ namespace vulkan
             }
         }
     }
-    VulkanCommands::~VulkanCommands(){}
+
+    VulkanCommands::~VulkanCommands(){
+	}
 }

@@ -114,6 +114,8 @@ if(Vulkan_FOUND)
         src/vulkan/VulkanRenderer.cpp
 		src/vulkan/VulkanRenderingTarget.h
 		src/vulkan/VulkanRenderingTarget.cpp
+		src/vulkan/VulkanCamera.h
+		src/vulkan/VulkanCamera.cpp
 
 		src/NormalCamera.cpp
     )

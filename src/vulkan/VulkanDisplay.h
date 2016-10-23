@@ -17,15 +17,13 @@ namespace vulkan
     private:
         VulkanContext& vulkanContext;
         VulkanRenderPass& renderPass;
+		VulkanMemoryManager& memoryManager;
 
         SDL_Window* window;
         VkSurfaceKHR surface;
         VkSwapchainKHR swapChain;
         vector<VkImageView> views;
         vector<VkFramebuffer> framebuffers;
-        VkImage depthImage;
-        VkDeviceMemory depthMemory;
-        VkImageView depthView;
 
         int height;
         int width;
@@ -34,14 +32,18 @@ namespace vulkan
 		VkSemaphore renderingDone;
 		VkSemaphore imageReady;
     public:
-        VulkanDisplay(VulkanContext& vulkanContext, VulkanRenderPass& renderPass, int width, int height);
+        VulkanDisplay(VulkanContext& vulkanContext, VulkanRenderPass& renderPass, VulkanMemoryManager& memoryManager, int width, int height);
         virtual void swap();
         void init();
         vector<VkFramebuffer> getFramebuffers() { return framebuffers; }
-        VkImageView getDepthView() { return depthView; }
 		virtual void prepareForNewFrame();
         virtual int getWidth() { return width; };
         virtual int getHeight() { return height; };
+		void setSemaphores(VkSemaphore beforeRendering, VkSemaphore renderingDone)
+		{
+			imageReady = beforeRendering;
+			this->renderingDone = renderingDone;
+		}
 		int getSwapChainIndex() { return swapIndex; };
 		VkSemaphore getRenderingDone() { return renderingDone; }
 		VkSemaphore getImageReady() { return imageReady; }
