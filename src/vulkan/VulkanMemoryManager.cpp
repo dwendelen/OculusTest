@@ -180,7 +180,7 @@ namespace vulkan
             throw new runtime_error("Could not upload uniform");
         }
         memcpy(dest, &m, sizeof(m));
-		memcpy(static_cast<byte*>(dest) + colorUniformOffset, &color, sizeof(color));
+		memcpy(static_cast<char*>(dest) + colorUniformOffset, &color, sizeof(color));
         VkMappedMemoryRange range = {};
         range.sType = VK_STRUCTURE_TYPE_MAPPED_MEMORY_RANGE;
         range.pNext = nullptr;
