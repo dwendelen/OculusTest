@@ -29,7 +29,7 @@ void Scene::init() {
 
 void Scene::rotate(Quatf rotation)
 {
-	//model->rotate(rotation);
+	model->rotate(rotation);
 }
 
 void Scene::enableWireframe() {

@@ -7,6 +7,11 @@
 #include "VulkanDescriptors.h"
 #include "VulkanMemoryManager.h"
 #include "LegoBrick.h"
+#include "Scene.h"
+#include "VulkanRenderer.h"
+#include "Engine.h"
+#include "VulkanCamera.h"
+#include "NullVR.h"
 
 using namespace std;
 
@@ -27,13 +32,31 @@ int main(int argc, char* argv[])
     VulkanMemoryManager vulkanMemoryManager(vulkanContext, vulkanDescriptors);
     vulkanMemoryManager.init();
 
-    VulkanDisplay vulkanDisplay(vulkanContext, renderPass, 800, 600);
-    vulkanDisplay.init();
+	VulkanDisplay vulkanDisplay(vulkanContext, renderPass, vulkanMemoryManager, 800, 600);
+	vulkanDisplay.init();
 
-    LegoBrick LegoBrick;
+    LegoBrick legoBrick;
+	legoBrick.init();
+
+	vulkanMemoryManager.load(legoBrick);
 
     VulkanCommands commands(vulkanContext, vulkanDisplay, renderPass, vulkanDescriptors, vulkanMemoryManager);
-    commands.init(LegoBrick.getIndices().size());
+    commands.init(legoBrick.getIndices().size() * 3);
+
+	Scene scene(legoBrick);
+	scene.init();
+
+	
+
+	VulkanRenderer renderer(vulkanContext, vulkanMemoryManager, commands, vulkanDisplay);
+	renderer.init();
+
+	VulkanCamera camera;
+	NullVR nullVR;
+	Engine engine(vulkanDisplay, camera, nullVR, renderer, legoBrick);
+	engine.run();
+
+	vkDeviceWaitIdle(vulkanContext.getDevice());
 
 	return 0;
 }

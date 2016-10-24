@@ -53,10 +53,10 @@ namespace vulkan {
 
     VulkanDescriptors::~VulkanDescriptors()
     {
-        if(uniformSet) {
+        /*if(uniformSet) {
             vkFreeDescriptorSets(context.getDevice(), pool, 1, &uniformSet);
             uniformSet = VK_NULL_HANDLE;
-        }
+        }*/
         if(pool) {
             vkDestroyDescriptorPool(context.getDevice(), pool, nullptr);
             pool = VK_NULL_HANDLE;

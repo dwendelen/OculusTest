@@ -26,6 +26,7 @@ namespace vulkan
             VulkanDescriptors& descriptors,
             VulkanMemoryManager& memoryManager);
         void init(int nbOfIndices);
+		VkCommandBuffer getCommandBuffer(int i) { return commandBuffers[i]; };
         ~VulkanCommands();
     };
 }
