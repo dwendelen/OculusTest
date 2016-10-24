@@ -94,7 +94,7 @@ namespace vulkan
 		swapCreateInfo.flags = 0;
         swapCreateInfo.surface = surface;
         swapCreateInfo.minImageCount = 3;
-        swapCreateInfo.imageFormat = VK_FORMAT_R8G8B8A8_SRGB;
+        swapCreateInfo.imageFormat = VK_FORMAT_B8G8R8A8_SRGB;
         swapCreateInfo.imageColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
         swapCreateInfo.imageExtent.width = width;
         swapCreateInfo.imageExtent.height = height;
@@ -126,7 +126,7 @@ namespace vulkan
             viewInfo.flags = 0;
             viewInfo.image = image;
             viewInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-            viewInfo.format = VK_FORMAT_R8G8B8A8_SRGB;
+            viewInfo.format = VK_FORMAT_B8G8R8A8_SRGB;
             viewInfo.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
             viewInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
             viewInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -143,7 +143,7 @@ namespace vulkan
             }
             views.push_back(view);
 
-			
+
             VkImageView attachments[] = {view, depthView};
 
             VkFramebufferCreateInfo framebufferInfo = {};
@@ -173,7 +173,7 @@ namespace vulkan
 			throw new runtime_error("Could not aquire next image in swapChain");
 		}
 	}
-    
+
 	void VulkanDisplay::swap() {
 		VkResult r;
 		VkPresentInfoKHR presentInfo = {};
