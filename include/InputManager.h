@@ -15,6 +15,7 @@ namespace input {
 
             float x;
             float y;
+        
             Uint32 lastTicks;
             bool shouldQuit;
             SDL_GameController *controller;

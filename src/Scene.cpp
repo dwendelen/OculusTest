@@ -7,6 +7,13 @@ using namespace OVR;
 using namespace memory;
 using namespace std;
 
+const float GRID_X = 0.0080f;
+const float GRID_Y = 0.0096f;
+const float GRID_Z = 0.0080f;
+
+const float HALF_GRID_X = GRID_X / 2;
+const float HALF_GRID_Y = GRID_Y / 2;
+const float HALF_GRID_Z = GRID_Z / 2;
 
 Scene::Scene(Model& model):
     legoBrick(model),
@@ -41,7 +48,35 @@ void Scene::disableWireframe() {
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glEnable(GL_CULL_FACE);
 }
+void Scene::moveUnit(int x, int y, int z) {
+    move(GRID_X * x, GRID_Y * y, GRID_Z * z);
+}
+float calculateMovement(float& value, float delta, float halfGrid, float grid) {
+    value += delta;
+    if(value > 0) {
+        if(value <= halfGrid) {
+            return 0.0f;
+        } else {
+            value = value - grid;
+            return grid;
+        }
+    } else {
+        if(value >= -halfGrid) {
+            return 0.0f;
+        } else {
+            value = value + grid;
+            return -grid;
+        }
+    }
+}
+void Scene::move(float x, float y, float z) {
+    Vector3f movement;
+    movement.x = calculateMovement(pseudoPosition.x, x, HALF_GRID_X, GRID_X);
+    movement.y = calculateMovement(pseudoPosition.y, y, HALF_GRID_Y, GRID_Y);
+    movement.z = calculateMovement(pseudoPosition.z, z, HALF_GRID_Z, GRID_Z);
+    model->move(movement);
 
+}
 void Scene::move(Vector3f translation){
     model->move(translation);
 }

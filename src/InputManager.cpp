@@ -34,10 +34,10 @@ namespace input {
                 break;
             }
         }
-        if(!controller) {
-            y = 1.0f;
-            x = 0.8f;
-        }
+        //if(!controller) {
+            //y = 1.0f;
+            //x = 0.8f;
+        //}
     }
 
     void InputManager::processInput() {
@@ -49,7 +49,7 @@ namespace input {
 				int fps = 1000 / elapsedMilis;
 				//cout << "FPS " << fps << endl; 
 			}
-			
+        
             while (SDL_PollEvent(&windowEvent))
             {
                 switch (windowEvent.type) {
@@ -64,17 +64,25 @@ namespace input {
 							case SDL_SCANCODE_SPACE:
 								scene.place();
 								break;
+                            case SDL_SCANCODE_BACKSPACE:
+                                wireframe = !wireframe;
+                                if(wireframe) {
+                                    scene.enableWireframe();
+                                } else {
+                                    scene.disableWireframe();
+                                }
+                                break;
 							case SDL_SCANCODE_A:
-								scene.move(Vector3f(-0.032f, 0, 0));
+                                scene.moveUnit(-1, 0, 0);
 								break;
 							case SDL_SCANCODE_D:
-								scene.move(Vector3f(0.032f, 0, 0));
+								scene.moveUnit( 1, 0, 0);
 								break;
 							case SDL_SCANCODE_W:
-								scene.move(Vector3f(0, 0, -0.016f));
+								scene.moveUnit(0, 0, -1);
 								break;
 							case SDL_SCANCODE_S:
-								scene.move(Vector3f(0, 0, 0.016f));
+								scene.moveUnit(0, 0,  1);
 								break;
 							case SDL_SCANCODE_TAB:
 								scene.changeColor();
@@ -104,16 +112,16 @@ namespace input {
                                     scene.changeColor();
                                     break;
                             case SDL_CONTROLLER_BUTTON_DPAD_UP:
-                                    scene.move(Vector3f(0, 0, -0.016f));
+                                    scene.moveUnit(0, 0, -1);
                                     break;
                             case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-                                    scene.move(Vector3f(0, 0, 0.016f));
+                                    scene.moveUnit(0, 0,  1);
                                     break;
                             case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                                    scene.move(Vector3f(-0.032f, 0, 0));
+                                    scene.moveUnit(-1, 0, 0);
                                     break;
                             case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                                    scene.move(Vector3f(0.032f, 0, 0));
+                                    scene.moveUnit( 1, 0, 0);
                                     break;
                         }
                         break;
@@ -151,9 +159,11 @@ namespace input {
             }
 
             float radiantsPerMilisec = 0.003f;
-            Quatf rotation = Quatf(Vector3f(0, 1, 0), radiantsPerMilisec * elapsedMilis * x);
-            rotation *= Quatf(Vector3f(1, 0, 0), radiantsPerMilisec * elapsedMilis * y);
-            scene.rotate(rotation);
+            float meterPerMilisec = 0.002f;
+            //Quatf rotation = Quatf(Vector3f(0, 1, 0), radiantsPerMilisec * elapsedMilis * x);
+            //rotation *= Quatf(Vector3f(1, 0, 0), radiantsPerMilisec * elapsedMilis * y);
+            //scene.rotate(rotation);
+            scene.move(x * meterPerMilisec , 0, y * meterPerMilisec);
     }
 
     void InputManager::quit()

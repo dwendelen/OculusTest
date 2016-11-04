@@ -25,11 +25,13 @@ class Scene
 
 	Quatf orientation;
 	int colorIndex;
-
+    Vector3f pseudoPosition;
 public:
 	Scene(Model& model);
 	void init();
 	void rotate(Quatf rotation);
+    void moveUnit(int x, int y, int z);
+    void move(float x, float y, float z);
 	void move(Vector3f translation);
 	void moveTo(Vector3f position);
 	void place();
