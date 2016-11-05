@@ -94,6 +94,12 @@ namespace input {
 							case SDL_SCANCODE_S:
 								scene.moveUnit(0, 0,  1);
 								break;
+							case SDL_SCANCODE_Q:
+								scene.rotate(Quatf(Vector3f(0, 1, 0), M_PI_2));
+								break;
+							case SDL_SCANCODE_E:
+								scene.rotate(Quatf(Vector3f(0, 1, 0), -M_PI_2));
+								break;
 							case SDL_SCANCODE_TAB:
 								scene.changeColor();
 								break;
