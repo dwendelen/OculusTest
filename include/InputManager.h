@@ -15,6 +15,7 @@ namespace input {
 
             float x;
             float y;
+			float z;
         
             Uint32 lastTicks;
             bool shouldQuit;

@@ -2,6 +2,8 @@
 #include "Extras/OVR_Math.h"
 
 #include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 using namespace std;
 using namespace OVR;
@@ -11,6 +13,7 @@ namespace input {
     InputManager::InputManager(Scene& scene, VR& vr):
         x(0),
         y(0),
+		z(0),
         lastTicks(0),
         scene(scene),
         vr(vr),
@@ -39,7 +42,14 @@ namespace input {
             //x = 0.8f;
         //}
     }
-
+	float convertinput(float raw) {
+		if (abs(raw) < 3000.0f) {
+			return 0;
+		}
+		else {
+			return raw / 32767.0f;
+		}
+	}
     void InputManager::processInput() {
             Uint32 ticks = SDL_GetTicks();
             Uint32 elapsedMilis = ticks - lastTicks;
@@ -98,31 +108,37 @@ namespace input {
                     case SDL_CONTROLLERBUTTONDOWN:
                         switch (windowEvent.cbutton.button) {
                             case SDL_CONTROLLER_BUTTON_Y:
-                                    wireframe = !wireframe;
-                                    if(wireframe) {
-                                        scene.enableWireframe();
-                                    } else {
-                                        scene.disableWireframe();
-                                    }
-                                    break;
+                                wireframe = !wireframe;
+                                if(wireframe) {
+                                    scene.enableWireframe();
+                                } else {
+                                    scene.disableWireframe();
+                                }
+                                break;
                             case SDL_CONTROLLER_BUTTON_A:
-                                    scene.place();
-                                    break;
+                                scene.place();
+                                break;
                             case SDL_CONTROLLER_BUTTON_X:
-                                    scene.changeColor();
-                                    break;
+                                scene.changeColor();
+                                break;
                             case SDL_CONTROLLER_BUTTON_DPAD_UP:
-                                    scene.moveUnit(0, 0, -1);
-                                    break;
+                                scene.moveUnit(0, 0, -1);
+                                break;
                             case SDL_CONTROLLER_BUTTON_DPAD_DOWN:
-                                    scene.moveUnit(0, 0,  1);
-                                    break;
+                                scene.moveUnit(0, 0,  1);
+                                break;
                             case SDL_CONTROLLER_BUTTON_DPAD_LEFT:
-                                    scene.moveUnit(-1, 0, 0);
-                                    break;
+                                scene.moveUnit(-1, 0, 0);
+                                break;
                             case SDL_CONTROLLER_BUTTON_DPAD_RIGHT:
-                                    scene.moveUnit( 1, 0, 0);
-                                    break;
+                                scene.moveUnit( 1, 0, 0);
+                                break;
+							case SDL_CONTROLLER_BUTTON_RIGHTSHOULDER:
+								scene.rotate(Quatf(Vector3f(0, 1, 0), -M_PI_2));
+								break;
+							case SDL_CONTROLLER_BUTTON_LEFTSHOULDER:
+								scene.rotate(Quatf(Vector3f(0, 1, 0), M_PI_2));
+								break;
                         }
                         break;
                     case SDL_CONTROLLERBUTTONUP:
@@ -138,32 +154,28 @@ namespace input {
                     case SDL_CONTROLLERAXISMOTION:
                         switch (windowEvent.caxis.axis) {
                         case SDL_CONTROLLER_AXIS_LEFTX:
-                            if (abs(windowEvent.caxis.value) < 3000) {
-                                x = 0;
-                            }
-                            else {
-                                x = windowEvent.caxis.value / 32767.0f;
-                            }
+							x = convertinput(windowEvent.caxis.value);
                             break;
                         case SDL_CONTROLLER_AXIS_LEFTY:
-                            if (abs(windowEvent.caxis.value) < 3000) {
-                                y = 0;
-                            }else {
-
-                                y = windowEvent.caxis.value / 32767.0f;
-                            }
-                                break;
+							z = convertinput(windowEvent.caxis.value);
+                            break;
+						case SDL_CONTROLLER_AXIS_TRIGGERLEFT:
+							y = -convertinput(windowEvent.caxis.value);
+							break;
+						case SDL_CONTROLLER_AXIS_TRIGGERRIGHT:
+							y = convertinput(windowEvent.caxis.value);
+							break;
                         }
                         break;
                 }
             }
 
             float radiantsPerMilisec = 0.003f;
-            float meterPerMilisec = 0.002f;
+            float meterPerMilisec = 0.001f;
             //Quatf rotation = Quatf(Vector3f(0, 1, 0), radiantsPerMilisec * elapsedMilis * x);
             //rotation *= Quatf(Vector3f(1, 0, 0), radiantsPerMilisec * elapsedMilis * y);
             //scene.rotate(rotation);
-            scene.move(x * meterPerMilisec , 0, y * meterPerMilisec);
+            scene.move(x * meterPerMilisec , y * meterPerMilisec, z * meterPerMilisec);
     }
 
     void InputManager::quit()
